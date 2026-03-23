@@ -15,6 +15,7 @@
  */
 package fr.utc.miage.shares;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,8 +30,8 @@ public class Portfolio {
     /**
      * Builds a Portfolio object with a specified map of actions.
      */
-    public Portfolio(Map<Action, Integer> actions) {
-        this.actions = actions;
+    public Portfolio() {
+        this.actions = new HashMap<>();
     }
 
     public int getActionQuantity(Action action) {

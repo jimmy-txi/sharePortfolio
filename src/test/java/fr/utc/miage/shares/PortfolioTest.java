@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 class PortfolioTest {
     
     private final Map<Action, Integer> actions = new HashMap<>();
-    private final Portfolio portfolio = new Portfolio(actions);
+    private final Portfolio portfolio = new Portfolio();
     private final Action action = new ActionSimple("Action1");
 
     /**
@@ -35,7 +35,7 @@ class PortfolioTest {
      */
     @Test
     void testConstructor() {
-        assertDoesNotThrow(() -> new Portfolio(actions));
+        assertDoesNotThrow(Portfolio::new);
     }
 
     /**
