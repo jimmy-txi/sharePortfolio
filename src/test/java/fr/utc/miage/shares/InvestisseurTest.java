@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +27,56 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import fr.utc.miage.Investisseur;
 
 class InvestisseurTest {
+    @Test
+    void teseConstructeur() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        assertAll(
+            "Cree un investisseur avec des champs valides",
+            ()-> assertNotNull(investisseur),
+            ()-> assertEquals("Dupont", investisseur.getNom()),
+            ()-> assertEquals("Jean", investisseur.getPrenom()),
+            ()-> assertEquals("1@gmail.com", investisseur.getEmail()),
+            ()-> assertEquals("password123", investisseur.getPassword())
+
+        );
+    }
+
+
+    @Test
+    void testGetters() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        assertAll(
+            "Verifie les getters",
+            ()-> assertEquals("Dupont", investisseur.getNom()),
+            ()-> assertEquals("Jean", investisseur.getPrenom()),
+            ()-> assertEquals("1@gmail.com", investisseur.getEmail()),
+            ()-> assertEquals("password123", investisseur.getPassword())
+        );
+    }
+
+    @Test
+    void testSetters() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        investisseur.setNom("Martin");
+        investisseur.setPrenom("Paul");
+        investisseur.setPassword("password456");
+        assertAll(
+            "Cree un ",
+            ()-> assertEquals("Martin", investisseur.getNom()),
+            ()-> assertEquals("Paul", investisseur.getPrenom()),
+            ()-> assertEquals("password456", investisseur.getPassword())
+        );
+    }
+
+    @Test
+    void testToString() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        assertAll(
+            "Verifie le toString",
+            ()-> assertEquals("Investisseur [nom=Dupont, prenom=Jean, email=1@gmail.com, password=password123]", investisseur.toString())
+
+        );
+    }
 
     @Test
     void testCreerInvestisseurValide() {
