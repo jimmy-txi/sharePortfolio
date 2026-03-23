@@ -6,9 +6,12 @@
 
 ## Membres de l'équipe (Team Members)
 
-- Jimmy (jimmy-txi)
+- Jimmy MAURIAC (jimmy-txi)
 - Zhengyi CHEN (Kant-Righteous)
 - Kepeng QIN (KpTanl)
+- Etienne SALAUZE (EtienneSalauze)
+- Titouan BRANDO (titoutan)
+- Sacha Brezisky (sacha33333)
 
 ## Documents pertinents (Relevant Documents)
 
