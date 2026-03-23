@@ -34,6 +34,12 @@ public class Portfolio {
         this.actions = new HashMap<>();
     }
 
+    /**
+     * Returns the quantity of a specified action in the portfolio.
+     * 
+     * @param action the action for which to get the quantity
+     * @return the quantity of the specified action in the portfolio
+     */
     public int getActionQuantity(Action action) {
         return this.actions.getOrDefault(action, 0);
     }

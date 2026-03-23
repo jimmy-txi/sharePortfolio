@@ -32,7 +32,8 @@ public class Investor {
         this.portfolio = new Portfolio();
     }
 
-    /* Buys a specified quantity of a given action and updates the portfolio accordingly.
+    /**
+    *  Buys a specified quantity of a given action and updates the portfolio accordingly.
     *
     * @param a the action to buy
     * @param quantity the quantity to buy
