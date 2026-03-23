@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import fr.utc.miage.Investisseur;
@@ -121,5 +122,24 @@ class InvestisseurTest {
             () -> Investisseur.creerInvestisseur("Martin", "Paul", "existant@gmail.com", "mdp123")
         );
         assertEquals("L'email existe déjà", exception.getMessage());
+    }
+
+    @Test
+    void testDeleteInvestisseurExisting() {
+        Investisseur.creerInvestisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        assertAll(
+            "Supprime un investisseur existant",
+            ()-> assertDoesNotThrow(() -> Investisseur.deleteInvestisseur("1@gmail.com"))
+        );
+    }
+
+
+    @Test
+    void testDeleteInvestisseurEmailNotExistingOrNull() {
+        assertAll(
+            "Supprime un investisseur avec des champs non existants",
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur("emailNonExistant@gmail.com")),
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur(null))
+        );
     }
 }
