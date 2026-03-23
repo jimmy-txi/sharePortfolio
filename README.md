@@ -37,3 +37,4 @@ limitations under the License.
 
 - En anglais
 - Règles standards de Java
+- Faire la javadoc
