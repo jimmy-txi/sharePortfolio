@@ -56,6 +56,14 @@ class ActionSimpleTest {
     }
 
     @Test
+    void testSaveActionValueNegative() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        final Jour jour = new Jour(2026, 76);
+        final float value = -100f;
+        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jour, value));
+    }
+
+    @Test
     void testConsultationPrixInexistantRetourner0() {
         final ActionSimple action = new ActionSimple(FOO_SHARE1);
         final Jour jour = new Jour(2026, 76);
