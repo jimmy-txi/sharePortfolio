@@ -26,16 +26,29 @@ public class Portfolio {
     
     private Map<Action, Integer> actions;
 
+    /**
+     * Builds a Portfolio object with a specified map of actions.
+     */
     public Portfolio(Map<Action, Integer> actions) {
         this.actions = actions;
     }
 
-    public Map<Action, Integer> getActions() {
-        return actions;
+    public int getActionQuantity(Action action) {
+        return this.actions.getOrDefault(action, 0);
     }
 
-    public void setActions(Map<Action, Integer> actions) {
-        this.actions = actions;
+    /** 
+    * Adds a specified quantity of an action to the portfolio.
+    * @param action the action to add
+    * @param quantity the quantity to add
+    */
+    public void addActionQuantity(Action action, Integer quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if (action == null) {
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        this.actions.put(action, this.actions.getOrDefault(action, 0) + quantity);
     }
-
 }

@@ -17,78 +17,49 @@ package fr.utc.miage.shares;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-public class PortfolioTest {
+class PortfolioTest {
     
+    private final Map<Action, Integer> actions = new HashMap<>();
+    private final Portfolio portfolio = new Portfolio(actions);
+    private final Action action = new ActionSimple("Action1");
+
+    /**
+     * Tests the constructor of the Portfolio class to ensure it creates an instance without throwing exceptions.
+     */
     @Test
-    public void testConstructor() {
-        Map<Action, Integer> actions = new HashMap<>();
+    void testConstructor() {
         assertDoesNotThrow(() -> new Portfolio(actions));
     }
 
+    /**
+     * Tests the addActionQuantity method of the Portfolio class to ensure it correctly adds a specified quantity of an action to the portfolio and updates the quantity accordingly.
+     */
     @Test
-    public void testGetActions() {
-        // Create a Portfolio object with a sample map of actions
-        Map<Action, Integer> sampleActions = new HashMap<>();
-        final Action action1 = new ActionSimple("Action1");
-        final Action action2 = new ActionSimple("Action2");
-        sampleActions.put(action1, 10);
-        sampleActions.put(action2, 20);
-        
-        Portfolio portfolio = new Portfolio(sampleActions);
-        
-        // Test the getActions method
-        Map<Action, Integer> retrievedActions = portfolio.getActions();
-        
-        // Assert that the retrieved actions match the sample actions
-        assertEquals(sampleActions, retrievedActions);
+    void testAddActionQuantity() {
+        portfolio.addActionQuantity(action, 1);
+        assertEquals(1, portfolio.getActionQuantity(action));
     }
 
+    /**
+     * Tests the addActionQuantity method of the Portfolio class to ensure it throws an IllegalArgumentException when a negative quantity is provided.
+     */
     @Test
-    public void testSetActions() {
-        // Create a Portfolio object with an initial map of actions
-        Map<Action, Integer> initialActions = new HashMap<>();
-        Action action1 = new ActionSimple("Action1");
-        Action action2 = new ActionSimple("Action2");
-        initialActions.put(action1, 10);
-        initialActions.put(action2, 20);
-        
-        Portfolio portfolio = new Portfolio(initialActions);
-        
-        // Create a new map of actions to set
-        Map<Action, Integer> newActions = new HashMap<>();
-        Action action3 = new ActionSimple("Action3");
-        Action action4 = new ActionSimple("Action4");
-        newActions.put(action3, 30);
-        newActions.put(action4, 40);
-        
-        // Set the new actions in the portfolio
-        portfolio.setActions(newActions);
-        
-        // Assert that the portfolio's actions have been updated to the new actions
-        assertEquals(newActions, portfolio.getActions());
+    void testAddActionQuantityNegativeQuantity(){
+        assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(action, -1));
     }
 
+    /**
+     * Tests the addActionQuantity method of the Portfolio class to ensure it throws an IllegalArgumentException when a null action is provided.
+     */
     @Test
-    public void testSetActionsWithNull() {
-        // Create a Portfolio object with an initial map of actions
-        Map<Action, Integer> initialActions = new HashMap<>();
-        Action action1 = new ActionSimple("Action1");
-        Action action2 = new ActionSimple("Action2");
-        initialActions.put(action1, 10);
-        initialActions.put(action2, 20);
-        
-        Portfolio portfolio = new Portfolio(initialActions);
-        
-        // Set the actions to null
-        portfolio.setActions(null);
-        
-        // Assert that the portfolio's actions have been updated to null
-        assertEquals(null, portfolio.getActions());
+    void testAddActionQuantityNullAction(){
+        assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(null, 1));
     }
 }

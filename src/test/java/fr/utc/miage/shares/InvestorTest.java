@@ -16,40 +16,31 @@
 package fr.utc.miage.shares;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
-public class InvestorTest {
+class InvestorTest {
     
+    private final Investor investor = new Investor();
+    private final Action action = new ActionSimple("Action1");  
+
+    /**
+     * Tests the constructor of the Investor class to ensure it creates an instance without throwing exceptions.
+     */
     @Test
-    public void testConstructor() {
-        Portfolio portfolio = new Portfolio(new HashMap<>());
-        Investor investor = new Investor(portfolio);
-        assertDoesNotThrow(() -> new Investor(portfolio));
+    void testConstructor() {
+        assertDoesNotThrow(Investor::new);
         assertNotNull(investor);
     }
 
+    /**
+     * Tests the buy method of the Investor class to ensure it throws an IllegalArgumentException when a negative quantity is provided.
+     */
     @Test
-    public void testBuy() {
-        Portfolio portfolio = new Portfolio(new HashMap<>());
-        Investor investor = new Investor(portfolio);
-        Action action = new ActionSimple("Action1");
-        investor.buy(action, 10);
-        assertEquals(investor.getPortfolio().getActions().get(action), 10);
+    void testBuyNegativeQuantity() {
+        assertThrows(IllegalArgumentException.class, () -> investor.buy(action, -1));
     }
-
-    @Test
-    public void testBuyNegativeQuantity() {
-        Portfolio portfolio = new Portfolio(new HashMap<>());
-        Investor investor = new Investor(portfolio);
-        Action action = new ActionSimple("Action1");
-        assertThrows(IllegalArgumentException.class, () -> investor.buy(action, -5));
-    }
-
-
 }

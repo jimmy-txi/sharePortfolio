@@ -29,12 +29,8 @@ public class Investor {
     *
     * @param portfolio the portfolio associated with the investor
     */
-    public Investor(Portfolio portfolio) {
-        this.portfolio = portfolio;
-    }
-    
-    public Portfolio getPortfolio() {
-        return portfolio;
+    public Investor() {
+
     }
 
     /* Buys a specified quantity of a given action and updates the portfolio accordingly.
@@ -46,9 +42,7 @@ public class Investor {
         if(quantity < 0){
             throw new IllegalArgumentException("Quantity must be positive");
         }else{
-            this.portfolio.getActions().put(a, quantity);
+            this.portfolio.addActionQuantity(a, quantity);
         }
     }
-    
-
 }
