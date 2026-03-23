@@ -43,14 +43,15 @@ public class ActionSimple extends Action {
         if (j.isAfterToday()){
             throw new IllegalArgumentException("Date after today");
         }
+        if (mapCours.containsKey(j)) {
+            throw new IllegalArgumentException("Date Already Exist");
+        }
         if (!this.mapCours.containsKey(j)) {
             if (v > 0){
                 this.mapCours.put(j, v);
             } else {
                 throw new IllegalArgumentException("Value out of range");
             }
-        } else  {
-            throw new IllegalArgumentException("Date Already Exist");
         }
     }
 
@@ -63,11 +64,13 @@ public class ActionSimple extends Action {
         }
     }
 
+    // for better SonarQube performance
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
 
+    // for better SonarQube performance
     @Override
     public int hashCode() {
         return super.hashCode();
