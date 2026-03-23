@@ -17,6 +17,8 @@ package fr.utc.miage.shares;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,20 +30,37 @@ class ActionSimpleTest {
     @Test
     void testEnregistreActionReussir() {
         final ActionSimple action = new ActionSimple(FOO_SHARE1);
-        final Jour jour = new Jour(2026,76);
+        final Jour jour = new Jour(2026, 76);
         assertAll(
                 "Enregistrer une Action Pas Réussir",
-                () -> assertDoesNotThrow(() -> action.enrgCours(jour,150.00f)),
-                () -> assertEquals(150.00f,action.valeur(jour))
+                () -> assertDoesNotThrow(() -> action.enrgCours(jour, 150.00f)),
+                () -> assertEquals(150.00f, action.valeur(jour))
         );
     }
 
     @Test
-    void testConsultationPrixInexistantRetourner0(){
+    void testEnregistrerJourAfterTodayThrowException() {
         final ActionSimple action = new ActionSimple(FOO_SHARE1);
-        final Jour jour = new Jour(2026,76);
+        final LocalDate dateAfterToday = LocalDate.now().plusDays(10);
+        final Jour jourAfterToday = new Jour(dateAfterToday.getYear(), dateAfterToday.getDayOfYear());
+        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jourAfterToday, 150.00f), "Make sure if input a date after today throw an Exception");
+    }
+
+    @Test
+    void testEnregistrerJourExistantThrowException() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        final Jour jour = new Jour(2026, 76);
+        action.enrgCours(jour, 150.00f);
+        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jour, 150.00f), "Make sure do not save same date");
+
+    }
+
+    @Test
+    void testConsultationPrixInexistantRetourner0() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        final Jour jour = new Jour(2026, 76);
         assertDoesNotThrow(() -> action.valeur(jour));
-        assertEquals(0,action.valeur(jour));
+        assertEquals(0, action.valeur(jour));
     }
 
 }

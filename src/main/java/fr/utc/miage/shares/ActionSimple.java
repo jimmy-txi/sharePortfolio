@@ -40,8 +40,13 @@ public class ActionSimple extends Action {
 
     // enrg possible si pas de cours pour ce jour
     public void enrgCours(final Jour j, final float v) {
+        if (j.isAfterToday()){
+            throw new IllegalArgumentException("Date after today");
+        }
         if (!this.mapCours.containsKey(j)) {
             this.mapCours.put(j, v);
+        } else  {
+            throw new IllegalArgumentException("Already Exist");
         }
     }
 
@@ -52,5 +57,15 @@ public class ActionSimple extends Action {
         } else {
             return DEFAULT_ACTION_VALUE;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }
