@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ActionSimpleTest {
 
     private static final String FOO_SHARE1 = "Foo Share 1";
+    private static final String FOO_SHARE2 = "Foo Share 2";
 
     @Test
     void testEnregistreActionReussir() {
@@ -71,4 +72,30 @@ class ActionSimpleTest {
         assertEquals(0, action.valeur(jour));
     }
 
+    @Test
+    void testEquals() {
+        final ActionSimple action1 = new ActionSimple(FOO_SHARE1);
+        final ActionSimple action2 = new ActionSimple(FOO_SHARE1);
+        final ActionSimple action3 = new ActionSimple(FOO_SHARE2);
+
+        assertAll(
+                "ActionSimple equality should depend on the label",
+                () -> assertEquals(action1, action2),
+                () -> assertNotEquals(action1, action3),
+                () -> assertNotEquals(null, action1),
+                () -> assertNotEquals(action1, new Jour(2026, 76))
+        );
+    }
+
+    @Test
+    void testHashCode() {
+        final ActionSimple action1 = new ActionSimple(FOO_SHARE1);
+        final ActionSimple action2 = new ActionSimple(FOO_SHARE1);
+
+        assertAll(
+                "ActionSimple hashCode should be stable and consistent with equals",
+                () -> assertDoesNotThrow(action1::hashCode),
+                () -> assertEquals(action1.hashCode(), action2.hashCode())
+        );
+    }
 }
