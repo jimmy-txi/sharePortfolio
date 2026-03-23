@@ -50,19 +50,5 @@ public class Investor {
         }
     }
     
-    /*
-    * Sells a specified quantity of a given action and updates the portfolio accordingly.
-    *
-    * @param a the action to sell
-    * @param quantity the quantity to sell
-    */
-    public void sell(Action a, int quantity){
-        if(quantity < 0){
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-        if(quantity > this.portfolio.getActions().getOrDefault(a, 0)){
-            throw new IllegalArgumentException("Not enough quantity to sell");
-        }
-        this.portfolio.getActions().put(a, quantity);
-    }
+
 }

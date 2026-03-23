@@ -28,7 +28,6 @@ public class PortfolioTest {
     @Test
     public void testConstructor() {
         Map<Action, Integer> actions = new HashMap<>();
-        Portfolio portfolio = new Portfolio(actions);
         assertDoesNotThrow(() -> new Portfolio(actions));
     }
 

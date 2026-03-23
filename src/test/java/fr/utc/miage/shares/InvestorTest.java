@@ -51,31 +51,5 @@ public class InvestorTest {
         assertThrows(IllegalArgumentException.class, () -> investor.buy(action, -5));
     }
 
-    @Test
-    public void testSell() {
-        Portfolio portfolio = new Portfolio(new HashMap<>());
-        Investor investor = new Investor(portfolio);
-        Action action = new ActionSimple("Action1");
-        investor.buy(action, 10);
-        investor.sell(action, 5);
-        assertEquals(investor.getPortfolio().getActions().get(action), 5);
-    }
 
-    @Test
-    public void testSellNegativeQuantity() {
-        Portfolio portfolio = new Portfolio(new HashMap<>());
-        Investor investor = new Investor(portfolio);
-        Action action = new ActionSimple("Action1");
-        investor.buy(action, 10);
-        assertThrows(IllegalArgumentException.class, () -> investor.sell(action, -5));
-    }
-
-    @Test
-    public void testSellMoreThanOwned() {
-        Portfolio portfolio = new Portfolio(new HashMap<>());
-        Investor investor = new Investor(portfolio);
-        Action action = new ActionSimple("Action1");
-        investor.buy(action, 10);
-        assertThrows(IllegalArgumentException.class, () -> investor.sell(action, 15));
-    }
 }
