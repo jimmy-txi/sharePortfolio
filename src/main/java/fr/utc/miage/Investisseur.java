@@ -95,4 +95,14 @@ public class Investisseur {
         investisseursMap.put(email, nouvelInvestisseur);
         return nouvelInvestisseur;
     }
+
+    public static void deleteInvestisseur(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("L'email ne peut pas être null");
+        }
+        if (!investisseursMap.containsKey(email)) {
+            throw new IllegalArgumentException("L'email n'existe pas");
+        }
+        investisseursMap.remove(email);
+    }
 }

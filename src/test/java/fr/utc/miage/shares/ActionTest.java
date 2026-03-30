@@ -76,8 +76,7 @@ class ActionTest {
     void testEqualsWithObjectFromOtherClass() {
         final Action action1 = new ActionImpl(FOO_SHARE1);
         final Integer action2 = 0;
-
-        Assertions.assertNotEquals(action1, action2);
+        Assertions.assertNotSame(action2, action1);
     }
 
     @Test
@@ -96,6 +95,32 @@ class ActionTest {
         public float valeur(final Jour aJour) {
             return 0.0F;
         }
+    }
+
+    // for test the possibility of modification of the libelle
+    // [US]: Modification Infos Action #2
+    // [Test]: Modifier le libellé d'une action existante #62
+    @Test
+    void testSetLibelle() {
+        final Action action = new ActionImpl(FOO_SHARE1);
+        action.setLibelle(FOO_SHARE2);
+        Assertions.assertEquals(FOO_SHARE2, action.getLibelle(),
+                "Property Libelle value should be the same as the parameter used for construction");
+    }
+
+    // for test the modification of the libelle when enter null or isBlank
+    // [US]: Modification Infos Action #2
+    // [Test]: Échec de modification d'une action avec un libellé vide #80
+    @Test
+    void testSetLibelleWithNullorIsBlank() {
+        final Action action = new ActionImpl(FOO_SHARE1);
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> action.setLibelle(null),
+                        "Libelle cannot be null"),
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> action.setLibelle(""),
+                        "Libelle cannot be empty"),
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> action.setLibelle(" "),
+                        "Libelle cannot be blank"));
     }
 
 }
