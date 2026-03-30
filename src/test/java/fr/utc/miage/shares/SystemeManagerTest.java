@@ -18,6 +18,7 @@ package fr.utc.miage.shares;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,5 +41,17 @@ class SystemeManagerTest {
             // to display version "v1.2" in the footer
             () -> assertEquals("v1.2", systeme.getVersionCourante(), "Version 'v1.2' must be applied (and displayed in the footer)")
         );
+    }
+
+    @Test
+    void testAppliquerNouvelleVersionAvecAdminNull() {
+        SystemeManager systeme = new SystemeManager();
+        systeme.setVersionDisponible("v1.2");
+        
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            systeme.appliquerMiseAJour(null);
+        });
+        
+        assertEquals("Only an administrator can apply an update.", exception.getMessage());
     }
 }
