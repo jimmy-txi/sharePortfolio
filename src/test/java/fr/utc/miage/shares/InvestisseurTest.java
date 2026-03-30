@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025 David Navarre <David.Navarre at irit.fr>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package fr.utc.miage.shares;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -168,5 +183,34 @@ class InvestisseurTest {
     void testHashcodeDoesNotThrow() {
         Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
         assertDoesNotThrow(investisseur::hashCode, "hashCode should not throw");
+    }
+
+    @Test 
+    void testCreerInvestisseurEmailExistant() {
+        Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EXISTING_EMAIL, PASSWORD);
+        
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class, 
+            () -> Investisseur.creerInvestisseur(NEW_FIRST_NAME, NEW_LAST_NAME, EXISTING_EMAIL, NEW_PASSWORD)
+        );
+        assertEquals("L'email existe déjà", exception.getMessage());
+    }
+
+    @Test
+    void testDeleteInvestisseurExisting() {
+        Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        assertAll(
+            "Supprime un investisseur existant",
+            ()-> assertDoesNotThrow(() -> Investisseur.deleteInvestisseur(EMAIL))
+        );
+    }
+
+    @Test
+    void testDeleteInvestisseurEmailNotExistingOrNull() {
+        assertAll(
+            "Supprime un investisseur avec des champs non existants / nuls",
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur("emailNonExistant@gmail.com")),
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur(null))
+        );
     }
 }
