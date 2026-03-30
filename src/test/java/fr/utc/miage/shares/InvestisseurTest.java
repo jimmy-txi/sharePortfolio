@@ -18,6 +18,7 @@ package fr.utc.miage.shares;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -29,6 +30,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 class InvestisseurTest {
+
+    @BeforeEach
+    void setUp() {
+        Investisseur.clearInvestisseursMap();
+    }
 
     public static final String FIRST_NAME = "Dupont";
     public static final String LAST_NAME = "Jean";
@@ -186,5 +192,34 @@ class InvestisseurTest {
     void testBuyNullAction(){
         Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
         assertThrows(IllegalArgumentException.class, () -> investisseur.buy(null, 1));
+    }
+
+    // [Test-53]: Connexion fonctionne
+    @Test
+    void testConnexionFonctionne() {
+        Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        Investisseur result = Investisseur.authentifier(EMAIL, PASSWORD);
+        assertAll(
+            "Connexion réussie avec des credentials valides",
+            () -> assertNotNull(result),
+            () -> assertEquals(EMAIL, result.getEmail())
+        );
+    }
+
+    // [Test-56]: Connexion refusée investisseur [echec]
+    @Test
+    void testConnexionRefusee() {
+        Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        assertAll(
+            "Connexion refusée avec des credentials invalides",
+            () -> assertThrows(IllegalArgumentException.class,
+                () -> Investisseur.authentifier(EMAIL, NEW_PASSWORD)),
+            () -> assertThrows(IllegalArgumentException.class,
+                () -> Investisseur.authentifier(INVALID_EMAIL, PASSWORD)),
+            () -> assertThrows(IllegalArgumentException.class,
+                () -> Investisseur.authentifier(null, PASSWORD)),
+            () -> assertThrows(IllegalArgumentException.class,
+                () -> Investisseur.authentifier(EMAIL, null))
+        );
     }
 }

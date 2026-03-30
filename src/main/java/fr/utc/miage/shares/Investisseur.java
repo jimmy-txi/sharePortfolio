@@ -107,6 +107,28 @@ public class Investisseur {
         return nouvelInvestisseur;
     }
 
+    public static void clearInvestisseursMap() {
+        investisseursMap.clear();
+    }
+
+    /**
+     * [US-30]: Authentifie un investisseur avec son email et mot de passe.
+     * @param email l'email de l'investisseur
+     * @param password le mot de passe
+     * @return l'investisseur si les credentials sont valides
+     * @throws IllegalArgumentException si les credentials sont invalides
+     */
+    public static Investisseur authentifier(String email, String password) {
+        if (email == null || password == null) {
+            throw new IllegalArgumentException("L'email et le mot de passe ne peuvent pas être null");
+        }
+        Investisseur investisseur = investisseursMap.get(email);
+        if (investisseur == null || !investisseur.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Email ou mot de passe incorrect");
+        }
+        return investisseur;
+    }
+
     public static void deleteInvestisseur(String email) {
         if (email == null) {
             throw new IllegalArgumentException("L'email ne peut pas être null");
