@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.utc.miage.shares;
+package fr.utc.miage;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import fr.utc.miage.shares.Action;
+import fr.utc.miage.shares.ActionSimple;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import fr.utc.miage.Investisseur;
+import static org.junit.jupiter.api.Assertions.*;
 
 class InvestisseurTest {
     @Test
@@ -120,5 +116,59 @@ class InvestisseurTest {
             () -> Investisseur.creerInvestisseur("Martin", "Paul", "existant@gmail.com", "mdp123")
         );
         assertEquals("L'email existe déjà", exception.getMessage());
+    }
+
+    private final Investisseur investisseurTest = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+    private final Action actionTestForSale1 = new ActionSimple("ActionTestForSale1");
+    private final Action actionTestForSale2 = new ActionSimple("ActionTestForSale2");
+    private final Action actionTestForBuy1 = new ActionSimple("ActionTestForBuy1");
+    private final Action actionTestForBuy2 = new ActionSimple("ActionTestForBuy2");
+
+    @Test
+    void getTransactionsSale() {
+        assertDoesNotThrow(investisseurTest::getTransactionsSale);
+    }
+
+    @Test
+    void addTransactionSale() {
+        assertDoesNotThrow(()->investisseurTest.addTransactionSale(actionTestForSale1));
+    }
+
+    @Test
+    void getTransactionsBuy() {
+        assertDoesNotThrow(investisseurTest::getTransactionsBuy);
+    }
+
+    @Test
+    void addTransactionBuy() {
+        assertDoesNotThrow(()->investisseurTest.addTransactionSale(actionTestForBuy1));
+    }
+
+    // get all transactions history
+    // [US]: Historique Transactions #3
+    // [Test]: Consulter l'historique des transactions avec des données existantes #64
+    @Test
+    void getTransactionsHistory() {
+        investisseurTest.addTransactionSale(actionTestForSale1);
+        investisseurTest.addTransactionSale(actionTestForSale2);
+        investisseurTest.addTransactionBuy(actionTestForBuy1);
+        investisseurTest.addTransactionBuy(actionTestForBuy2);
+        assertAll(
+            "Verifie l'historique des transactions",
+            ()-> assertEquals(actionTestForSale1, investisseurTest.getTransactionsHistory().get("sale").get(0)),
+            ()-> assertEquals(actionTestForSale2, investisseurTest.getTransactionsHistory().get("sale").get(1)),
+            ()-> assertEquals(actionTestForBuy1, investisseurTest.getTransactionsHistory().get("buy").get(0)),
+            ()-> assertEquals(actionTestForBuy2, investisseurTest.getTransactionsHistory().get("buy").get(1))
+        );
+    }
+
+    // [Test]: Affichage de l'historique des transactions lorsqu'il est vide #81
+    @Test
+    void getTransactionsHistoryEmpty() {
+        assertAll(
+            "Verifie l'historique des transactions",
+            ()-> assertEquals(0, investisseurTest.getTransactionsHistory().get("sale").size()),
+            ()-> assertEquals(0, investisseurTest.getTransactionsHistory().get("buy").size())
+        );
     }
 }

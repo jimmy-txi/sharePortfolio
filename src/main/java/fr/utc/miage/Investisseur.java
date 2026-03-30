@@ -15,7 +15,11 @@
  */
 package fr.utc.miage;
 
+import fr.utc.miage.shares.Action;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Investisseur {
@@ -23,7 +27,46 @@ public class Investisseur {
     private String prenom;
     private String email;
     private String password;
+
+    // for record transactions sale
+    private List<Action> transactionsSale = new ArrayList<>();
+
+    // for record transaction buy
+    private List<Action> transactionsBuy = new ArrayList<>();
+
+    // get transactions sale history
+    public List<Action> getTransactionsSale() {
+        return transactionsSale;
+    }
+
+    // add an Action in transaction sale
+    public void addTransactionSale(Action transaction) {
+        this.transactionsSale.add(transaction);
+    }
+
+    // get transactions buy history
+    public List<Action> getTransactionsBuy() {
+        return transactionsBuy;
+    }
+
+    // add an Action in transaction buy
+    public void addTransactionBuy(Action transaction) {
+        this.transactionsBuy.add(transaction);
+    }
+
+    // get all transactions history
+    // [US]: Historique Transactions #3
+    // [Test]: Consulter l'historique des transactions avec des données existantes #64
+    // [Test]: Affichage de l'historique des transactions lorsqu'il est vide #81
+    public Map<String, List<Action>> getTransactionsHistory() {
+        Map<String, List<Action>> transactionsHistory = new HashMap<>();
+        transactionsHistory.put("sale", this.transactionsSale);
+        transactionsHistory.put("buy", this.transactionsBuy);
+        return transactionsHistory;
+    }
+
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
+
     public Investisseur(String nom, String prenom, String email, String password) {
         this.nom = nom;
         this.prenom = prenom;
@@ -51,7 +94,6 @@ public class Investisseur {
         return email;
     }
 
-
     public String getPassword() {
         return password;
     }
@@ -59,7 +101,6 @@ public class Investisseur {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     @Override
     public String toString() {
@@ -76,7 +117,7 @@ public class Investisseur {
         }
         if (investisseursMap.containsKey(email)) {
             throw new IllegalArgumentException("L'email existe déjà");
-        } 
+        }
         Investisseur nouvelInvestisseur = new Investisseur(nom, prenom, email, password);
         investisseursMap.put(email, nouvelInvestisseur);
         return nouvelInvestisseur;
