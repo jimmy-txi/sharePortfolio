@@ -156,7 +156,7 @@ class InvestisseurTest {
      */
     @Test
     void testBuyNegativeQuantity() {
-        Action action = new ActionSimple("Action1"); 
+        Action action = ActionSimpleTest.getDefaultActionSimple();
         Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
         assertThrows(IllegalArgumentException.class, () -> investisseur.buy(action, 0));
     }
@@ -164,14 +164,13 @@ class InvestisseurTest {
     @Test
     void testBuy(){
         Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
-        Action action = new ActionSimple("Action1"); 
+        Action action  = ActionSimpleTest.getDefaultActionSimple();
         assertDoesNotThrow(() -> investisseur.buy(action, 1));
     }
 
     @Test
     void testBuyNullAction(){
         Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
-        Action action = new ActionSimple("Action1"); 
         assertThrows(IllegalArgumentException.class, () -> investisseur.buy(null, 1));
     }
 }
