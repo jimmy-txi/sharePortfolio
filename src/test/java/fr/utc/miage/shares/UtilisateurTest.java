@@ -24,6 +24,7 @@ class UtilisateurTest {
     private static final String VALID_EMAIL = "user@mail.fr";
     private static final String INVALID_EMAIL = "invalid";
     private static final String VALID_PASSWORD = "password";
+    private static final String OTHER_VALID_EMAIL = "other@mail.fr";
 
     @Test
     void testConstructorWithCorrectParamsDoesNotThrows() {
@@ -96,6 +97,39 @@ class UtilisateurTest {
     void testSetPasswordWithEmptyThrows() {
         Utilisateur u = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
         assertThrows(IllegalArgumentException.class,() -> u.setPassword(""), "setPassword should throw when password is empty");
+    }
+
+    @Test
+    void testEqualsWithSameReturnsTrue() {
+        Utilisateur u = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
+        assertTrue(u.equals(u), "equals should return true with the same object");
+    }
+
+    @Test
+    void testEqualsWithSameMailReturnsTrue() {
+        Utilisateur u = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
+        Utilisateur u2 = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
+        assertTrue(u.equals(u2), "equals should return true with the same object");
+    }
+
+    @Test
+    void testEqualsWithDifferentMailReturnsFalse() {
+        Utilisateur u = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
+        Utilisateur u2 = new UtilisateurImpl(OTHER_VALID_EMAIL, VALID_PASSWORD);
+        assertFalse(u.equals(u2), "equals should return true with the same object");
+    }
+
+    @Test
+    void testEqualsWithDifferentClassReturnsFalse() {
+        Utilisateur u = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
+        String u2 = "";
+        assertFalse(u.equals(u2), "equals should return true with the same object");
+    }
+
+    @Test
+    void testHashcodeDoesNotThrow() {
+        Utilisateur u = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
+        assertDoesNotThrow(u::hashCode, "hashCode should not throw");
     }
     
     private static class UtilisateurImpl extends Utilisateur {

@@ -16,7 +16,6 @@
 package fr.utc.miage.shares;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class AdministrateurTest {
@@ -24,6 +23,7 @@ class AdministrateurTest {
     private static final String VALID_EMAIL = "admin@irit.fr";
     private static final String INVALID_EMAIL = "invalid";
     private static final String VALID_PASSWORD = "password";
+    private static final String OTHER_VALID_EMAIL = "other@mail.fr";
 
     public static Administrateur getDefaultAdministrateur() {
         return new Administrateur(VALID_EMAIL, VALID_PASSWORD);
@@ -63,5 +63,38 @@ class AdministrateurTest {
     void testConstructorWithEmptyPasswordThrows() {
         assertThrows(IllegalArgumentException.class, () -> new Administrateur(VALID_EMAIL, ""),
                 "Constructor should throw when password is null");
+    }
+
+    @Test
+    void testEqualsWithSameReturnsTrue() {
+        Administrateur admin = new Administrateur(VALID_EMAIL, VALID_PASSWORD);
+        assertTrue(admin.equals(admin), "equals should return true with the same object");
+    }
+
+    @Test
+    void testEqualsWithSameMailReturnsTrue() {
+        Administrateur admin = new Administrateur(VALID_EMAIL, VALID_PASSWORD);
+        Administrateur admin2 = new Administrateur(VALID_EMAIL, VALID_PASSWORD);
+        assertTrue(admin.equals(admin2), "equals should return true with the same object");
+    }
+
+    @Test
+    void testEqualsWithDifferentMailReturnsFalse() {
+        Administrateur admin = new Administrateur(VALID_EMAIL, VALID_PASSWORD);
+        Administrateur admin2 = new Administrateur(OTHER_VALID_EMAIL, VALID_PASSWORD);
+        assertFalse(admin.equals(admin2), "equals should return true with the same object");
+    }
+
+    @Test
+    void testEqualsWithDifferentClassReturnsFalse() {
+        Administrateur admin = new Administrateur(VALID_EMAIL, VALID_PASSWORD);
+        String admin2 = "";
+        assertFalse(admin.equals(admin2), "equals should return true with the same object");
+    }
+
+    @Test
+    void testHashcodeDoesNotThrow() {
+        Administrateur admin = new Administrateur(VALID_EMAIL, VALID_PASSWORD);
+        assertDoesNotThrow(admin::hashCode, "hashCode should not throw");
     }
 }
