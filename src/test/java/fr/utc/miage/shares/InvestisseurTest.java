@@ -64,6 +64,7 @@ class InvestisseurTest {
 
     @Test
     void testToString() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
         assertAll(
             "Verifie le toString",
             ()-> assertEquals("Investisseur [nom=Dupont, prenom=Jean, email=1@gmail.com, password=password123]", investisseur.toString())
@@ -121,6 +122,7 @@ class InvestisseurTest {
      */
     @Test
     void testBuyNegativeQuantity() {
+        Action action = new ActionSimple("Action1"); 
         Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
         assertThrows(IllegalArgumentException.class, () -> investisseur.buy(action, 0));
     }
