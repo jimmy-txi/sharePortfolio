@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.utc.miage;
+package fr.utc.miage.shares;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-import fr.utc.miage.shares.CompteCourtier;
+
 
 public class Investisseur {
+
+    private Random random = new Random();
     private String nom;
     private String prenom;
     private String email;
     private String password;
     private List<CompteCourtier> comptesCourtiers = new ArrayList<>();
+    private Portfolio portfolio;
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
     public Investisseur(String nom, String prenom, String email, String password) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.password = password;
+        this.portfolio = new Portfolio();
     }
 
     public String getNom() {
@@ -78,6 +84,24 @@ public class Investisseur {
         this.comptesCourtiers.add(compte);
     }
 
+    /**
+    *  reset a password of an investisseur and return the new password.
+    * @return the new password
+    * @throws IllegalArgumentException if the email is not set
+    *   */
+    public String resetPassword() {
+        if (this.email == null) {
+            throw new IllegalArgumentException("L'email doit être renseigné pour réinitialiser le mot de passe");
+        }   
+            byte[] array = new byte[7];
+            
+            random.nextBytes(array);            
+            String newPassword = new String(array, StandardCharsets.UTF_8);
+            this.setPassword(newPassword);
+            return newPassword;
+    }
+
+
     @Override
     public String toString() {
         return "Investisseur [nom=" + nom + ", prenom=" + prenom + ", email=" + email + ", password=" + password
@@ -111,5 +135,21 @@ public class Investisseur {
 
     public static void clearInvestisseursMap() {
         investisseursMap.clear();
+    }
+
+    /**
+    *  Buys a specified quantity of a given action and updates the portfolio accordingly.
+    *
+    * @param a the action to buy (must not be null)
+    * @param quantity the quantity to buy (must be positive)
+    */
+    public void buy(Action a, int quantity){
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if(a == null){
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        this.portfolio.addActionQuantity(a, quantity);
     }
 }
