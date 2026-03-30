@@ -26,9 +26,6 @@ import org.junit.jupiter.api.Test;
 
 class PortfolioTest {
     
-    private final Portfolio portfolio = new Portfolio();
-    private final Action action = new ActionSimple("Action1");
-
     /**
      * Tests the constructor of the Portfolio class to ensure it creates an instance without throwing exceptions.
      */
@@ -42,6 +39,8 @@ class PortfolioTest {
      */
     @Test
     void testAddActionQuantity() {
+        Portfolio portfolio = new Portfolio();
+        Action action = new ActionSimple("Action1");
         portfolio.addActionQuantity(action, 1);
         assertEquals(1, portfolio.getActionQuantity(action));
     }
@@ -51,6 +50,8 @@ class PortfolioTest {
      */
     @Test
     void testAddActionQuantityNegativeQuantity(){
+        Portfolio portfolio = new Portfolio();
+        Action action = new ActionSimple("Action1");
         assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(action, 0));
     }
 
@@ -59,6 +60,7 @@ class PortfolioTest {
      */
     @Test
     void testAddActionQuantityNullAction(){
+        Portfolio portfolio = new Portfolio();
         assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(null, 1));
     }
 }
