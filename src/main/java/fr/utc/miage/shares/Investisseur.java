@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.utc.miage;
+package fr.utc.miage.shares;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Investisseur {
@@ -23,6 +25,7 @@ public class Investisseur {
     private String prenom;
     private String email;
     private String password;
+    private List<CompteCourtier> comptesCourtiers = new ArrayList<>();
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
     public Investisseur(String nom, String prenom, String email, String password) {
         this.nom = nom;
@@ -60,6 +63,18 @@ public class Investisseur {
         this.password = password;
     }
 
+    // [US-20]: make a liason between investisseur and compte courtier 
+    public List<CompteCourtier> getComptesCourtiers() {
+        return comptesCourtiers;
+    }
+
+    // [US-20]: make a liason between investisseur and compte courtier 
+    public void lierCompteCourtier(CompteCourtier compte) {
+        if (compte == null) {
+            throw new IllegalArgumentException("Le compte courtier ne peut pas être null");
+        }
+        this.comptesCourtiers.add(compte);
+    }
 
     @Override
     public String toString() {
@@ -90,5 +105,9 @@ public class Investisseur {
             throw new IllegalArgumentException("L'email n'existe pas");
         }
         investisseursMap.remove(email);
+    }
+
+    public static void clearInvestisseursMap() {
+        investisseursMap.clear();
     }
 }

@@ -18,17 +18,22 @@ package fr.utc.miage.shares;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import fr.utc.miage.Investisseur;
-
 
 
 class InvestisseurTest {
+
+    @AfterEach
+    void tearDown() { // for clear static map after each test
+        Investisseur.clearInvestisseursMap();
+        CompteCourtier.viderComptesMap();
+    }
 
     public static final String FIRST_NAME = "Dupont";
     public static final String LAST_NAME = "Jean";
@@ -41,6 +46,9 @@ class InvestisseurTest {
 
     public static final String INVALID_EMAIL = "invalid.email.com";
     public static final String EXISTING_EMAIL = "existant@gmail.com";
+
+    public static final String COURTIER_NAME = "Boursorama";
+    public static final String COURTIER_IDENTIFIANT = "123456789";
 
     @Test
     void teseConstructeur() {
@@ -139,11 +147,11 @@ class InvestisseurTest {
     }
 
     @Test
-    void testDeleteInvestisseurExisting() {
-        Investisseur.creerInvestisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        void testDeleteInvestisseurExisting() {
+            Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
         assertAll(
             "Supprime un investisseur existant",
-            ()-> assertDoesNotThrow(() -> Investisseur.deleteInvestisseur("1@gmail.com"))
+            ()-> assertDoesNotThrow(() -> Investisseur.deleteInvestisseur(EMAIL))
         );
     }
 
@@ -152,8 +160,31 @@ class InvestisseurTest {
     void testDeleteInvestisseurEmailNotExistingOrNull() {
         assertAll(
             "Supprime un investisseur avec des champs non existants",
-            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur("emailNonExistant@gmail.com")),
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur(INVALID_EMAIL)),
             ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur(null))
+        );
+    }
+
+    // [Test-63]: Liaison réussie d'un compte courtier à un investisseur
+    @Test
+    void testLierCompteCourtierValide() {
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        CompteCourtier compte = new CompteCourtier(COURTIER_NAME, COURTIER_IDENTIFIANT);
+        investisseur.lierCompteCourtier(compte);
+        assertAll(
+            "Liaison réussie d'un compte courtier",
+            () -> assertEquals(1, investisseur.getComptesCourtiers().size()),
+            () -> assertEquals(compte, investisseur.getComptesCourtiers().get(0))
+        );
+    }
+
+    // [Test-77]: Échec de liaison - compte courtier null
+    @Test
+    void testLierCompteCourtierNull() {
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> investisseur.lierCompteCourtier(null)
         );
     }
 }
