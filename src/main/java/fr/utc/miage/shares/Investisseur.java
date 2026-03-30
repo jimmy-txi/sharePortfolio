@@ -88,6 +88,19 @@ public class Investisseur extends Utilisateur {
         return "Investisseur [nom=" + nom + ", prenom=" + prenom + ", email=" + getEmail()
                 + "]";
     }
+
+    // for SonarQube
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    // for SonarQube
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
     /**
     *  Buys a specified quantity of a given action and updates the portfolio accordingly.
     *

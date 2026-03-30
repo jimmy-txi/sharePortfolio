@@ -38,4 +38,10 @@ public class Administrateur extends Utilisateur {
     public boolean equals(Object o) {
         return super.equals(o);
     }
+
+    // For SonarQube
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
