@@ -17,7 +17,11 @@ package fr.utc.miage.shares;
 
 import java.util.Objects;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
+
 public abstract class Utilisateur {
+    private final Random random = new Random();
     private final String email;
     private String password;
 
@@ -71,6 +75,20 @@ public abstract class Utilisateur {
             throw new IllegalArgumentException("Le password n'est pas valide");
         }
         this.password = password;
+    }
+
+    /**
+     *  reset a password of an investisseur and return the new password.
+     * @return the new password
+     * @throws IllegalArgumentException if the email is not set
+     */
+    public String resetPassword() {
+        byte[] array = new byte[7];
+
+        random.nextBytes(array);
+        String newPassword = new String(array, StandardCharsets.UTF_8);
+        this.setPassword(newPassword);
+        return newPassword;
     }
 
     @Override

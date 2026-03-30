@@ -131,6 +131,14 @@ class UtilisateurTest {
         Utilisateur u = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
         assertDoesNotThrow(u::hashCode, "hashCode should not throw");
     }
+
+    @Test
+    void testResetPasswordValide() {
+        UtilisateurImpl investisseur = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
+        String newPassword = investisseur.resetPassword();
+        assertNotEquals(VALID_PASSWORD, newPassword);
+        assertTrue(investisseur.verifierMotDePasse(newPassword), "resetPassword should set the new password");
+    }
     
     private static class UtilisateurImpl extends Utilisateur {
         public UtilisateurImpl(String email, String password) {
