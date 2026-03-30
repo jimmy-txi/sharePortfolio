@@ -15,11 +15,14 @@
  */
 package fr.utc.miage.shares;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 class JourTest {
@@ -125,6 +128,26 @@ class JourTest {
 
         assertEquals(expected, result,
                 "ToString should be format as \"Jour [year=\" + year + \", day=\" + day + \"]\"");
+    }
+
+    @Test
+    void isAfter() {
+        final Jour laterDay = new Jour(2025, 2);
+        final Jour earlierDay = new Jour(2025, 1);
+
+        assertTrue(laterDay.isAfter(earlierDay), "A later day in the same year should be after an earlier day");
+        assertFalse(earlierDay.isAfter(laterDay), "An earlier day should not be after a later day");
+    }
+
+    @Test
+    void isAfterToday() {
+        final LocalDate today = LocalDate.now();
+        final LocalDate tomorrow = today.plusDays(1);
+        final Jour todayJour = new Jour(today.getYear(), today.getDayOfYear());
+        final Jour tomorrowJour = new Jour(tomorrow.getYear(), tomorrow.getDayOfYear());
+
+        assertFalse(todayJour.isAfterToday(), "Today should not be considered after today");
+        assertTrue(tomorrowJour.isAfterToday(), "Tomorrow should be considered after today");
     }
 
     /**
