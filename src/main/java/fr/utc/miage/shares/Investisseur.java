@@ -116,4 +116,21 @@ public class Investisseur extends Utilisateur {
         }
         this.portfolio.addActionQuantity(a, quantity);
     }
+
+
+    /**
+     * Sells a specified quantity of a given action and updates the portfolio accordingly.
+     */
+    public void sell(Action a, int quantity){
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if(a == null){
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        if (this.portfolio.getActionQuantity(a) < quantity) {
+            throw new IllegalArgumentException("Not enough quantity to sell");
+        }
+        this.portfolio.removeActionQuantity(a, quantity);
+    }
 }

@@ -171,4 +171,44 @@ class InvestisseurTest {
         Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
         assertDoesNotThrow(investisseur::hashCode, "hashCode should not throw");
     }
+
+    @Test
+    void testSellActionWithNegativeQuantityThrows() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        assertThrows(IllegalArgumentException.class, () -> investisseur.sell(action, -10));
+    }
+
+    @Test 
+    void testSellNullActionThrows() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        assertThrows(IllegalArgumentException.class, () -> investisseur.sell(null, 10));
+    }
+
+    @Test 
+    void testSellActionWithValidQuantityDoesNotThrow() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        investisseur.buy(action, 10);
+        assertDoesNotThrow(() -> investisseur.sell(action, 5));
+    }
+
+    @Test
+    void testSellActionWithQuantityGreaterThanOwnedThrows() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        investisseur.buy(action, 10);
+        assertThrows(IllegalArgumentException.class, () -> investisseur.sell(action, 15));
+    }
+
+    @Test 
+    void testSellActionWithQuantityEqualToOwnedDoesNotThrow() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        investisseur.buy(action, 10);
+        assertDoesNotThrow(() -> investisseur.sell(action, 10));
+    }
+
+    
+
 }

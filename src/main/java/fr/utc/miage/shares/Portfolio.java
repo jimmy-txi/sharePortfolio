@@ -58,4 +58,22 @@ public class Portfolio {
         }
         this.actions.put(action, this.actions.getOrDefault(action, 0) + quantity);
     }
+
+    public void removeActionQuantity(Action a, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if (a == null) {
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        int currentQuantity = this.actions.getOrDefault(a, 0);
+        if (currentQuantity < quantity) {
+            throw new IllegalArgumentException("Not enough quantity to remove");
+        }
+        if (currentQuantity == quantity) {
+            this.actions.remove(a);
+        } else {
+            this.actions.put(a, currentQuantity - quantity);
+        }
+    }
 }
