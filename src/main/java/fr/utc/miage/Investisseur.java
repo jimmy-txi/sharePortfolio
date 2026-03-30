@@ -18,17 +18,16 @@ package fr.utc.miage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Investisseur {
+import fr.utc.miage.shares.Utilisateur;
+
+public class Investisseur extends Utilisateur {
     private String nom;
     private String prenom;
     private String email;
     private String password;
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
     public Investisseur(String nom, String prenom, String email, String password) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.email = email;
-        this.password = password;
+        super(nom, prenom, email, password);
     }
 
     public String getNom() {
