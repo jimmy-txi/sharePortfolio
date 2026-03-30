@@ -26,7 +26,6 @@ class InvestisseurTest {
     @AfterEach
     void tearDown() { // for clear static map after each test
         Investisseur.clearInvestisseursMap();
-        CompteCourtier.viderComptesMap();
     }
 
     public static final String FIRST_NAME = "Dupont";
@@ -219,13 +218,18 @@ class InvestisseurTest {
         );
     }
 
-    // [Test-77]: Échec de liaison - compte courtier null
+
+    // [Test-77]: Échec de liaison - compte courtier déjà lié
     @Test
-    void testLierCompteCourtierNull() {
+    void testLierCompteCourtierDejaLie() {
         Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        CompteCourtier compte = new CompteCourtier(COURTIER_NAME, COURTIER_IDENTIFIANT);
+        investisseur.lierCompteCourtier(compte);
+        
+        CompteCourtier memeCompte = new CompteCourtier(COURTIER_NAME, COURTIER_IDENTIFIANT);
         assertThrows(
             IllegalArgumentException.class,
-            () -> investisseur.lierCompteCourtier(null)
+            () -> investisseur.lierCompteCourtier(memeCompte)
         );
     }
 

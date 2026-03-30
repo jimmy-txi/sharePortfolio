@@ -21,14 +21,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 public class ComptCourtierTest {
 
-    @AfterEach
-    void tearDown() {
-        CompteCourtier.viderComptesMap();
+    private CompteCourtierService compteCourtierService;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() {
+        compteCourtierService = new CompteCourtierService();
     }
 
     public static final String NOM_COURTIER = "Boursorama";
@@ -86,7 +87,8 @@ public class ComptCourtierTest {
     // [Test-63]: test creer compte courtier valide 
     @Test
     void testCreerCompteCourtierValide() {
-        CompteCourtier compteCourtier = CompteCourtier.creerCompteCourtier(NOM_COURTIER, IDENTIFIANT);
+        CompteCourtier compteCourtier = new CompteCourtier(NOM_COURTIER, IDENTIFIANT);
+        compteCourtierService.enregistrerCompteCourtier(compteCourtier);
         assertAll(
             "Cree un compte courtier avec des champs valides",
             ()-> assertNotNull(compteCourtier),
@@ -95,24 +97,22 @@ public class ComptCourtierTest {
         );
     }
 
-    // [Test-63]: test creer compte courtier avec des champs nuls 
+    // [Test-63]: test enregistrer compte courtier avec un null 
     @Test
-    void testCreerCompteCourtierChampsNuls() {
-        assertAll(
-            "Cree un compte courtier avec des champs nuls",
-            ()-> assertThrows(IllegalArgumentException.class, () -> CompteCourtier.creerCompteCourtier(null, IDENTIFIANT)),
-            ()-> assertThrows(IllegalArgumentException.class, () -> CompteCourtier.creerCompteCourtier(NOM_COURTIER, null))
-        );
+    void testEnregistrerCompteCourtierNull() {
+        assertThrows(IllegalArgumentException.class, () -> compteCourtierService.enregistrerCompteCourtier(null));
     }
 
-    // [Test-63]: test creer compte courtier avec identifiant existant 
+    // [Test-63]: test enregistrer compte courtier avec identifiant existant 
     @Test
     void testCreerCompteCourtierIdentifiantExistant() {
-        CompteCourtier.creerCompteCourtier(NOM_COURTIER, IDENTIFIANT);
+        CompteCourtier compte1 = new CompteCourtier(NOM_COURTIER, IDENTIFIANT);
+        compteCourtierService.enregistrerCompteCourtier(compte1);
         
+        CompteCourtier compte2 = new CompteCourtier(NOM_COURTIER_MODIF, IDENTIFIANT);
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class, 
-            () -> CompteCourtier.creerCompteCourtier(NOM_COURTIER_MODIF, IDENTIFIANT)
+            () -> compteCourtierService.enregistrerCompteCourtier(compte2)
         );
         assertEquals("L'identifiant existe déjà", exception.getMessage());
     }

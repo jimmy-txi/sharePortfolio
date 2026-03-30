@@ -142,6 +142,9 @@ public class Investisseur extends Utilisateur {
         if (compte == null) {
             throw new IllegalArgumentException("Le compte courtier ne peut pas être null");
         }
+        if (this.comptesCourtiers.contains(compte)) {
+            throw new IllegalArgumentException("Ce compte courtier est déjà lié à l'investisseur");
+        }
         this.comptesCourtiers.add(compte);
     }
 
