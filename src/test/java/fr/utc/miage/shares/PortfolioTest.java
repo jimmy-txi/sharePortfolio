@@ -60,4 +60,20 @@ class PortfolioTest {
         Portfolio portfolio = new Portfolio();
         assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(null, 1));
     }
+
+    /**
+     * Tests the getActions method of the Portfolio class to ensure it returns a correct map of all actions in the portfolio with their quantities.
+     */
+    @Test
+    void testGetActions(){
+        Portfolio portfolio = new Portfolio();
+        Action action1 = ActionSimpleTest.getDefaultActionSimple();
+        Action action2 = new ActionSimple("Action2");
+        portfolio.addActionQuantity(action1, 1);
+        portfolio.addActionQuantity(action2, 2);
+        Map<Action, Integer> expectedActions = new HashMap<>();
+        expectedActions.put(action1, 1);
+        expectedActions.put(action2, 2);
+        assertEquals(expectedActions, portfolio.getActions());
+    }
 }
