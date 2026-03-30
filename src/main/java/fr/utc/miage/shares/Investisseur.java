@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.utc.miage;
+package fr.utc.miage.shares;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +23,14 @@ public class Investisseur {
     private String prenom;
     private String email;
     private String password;
+    private Portfolio portfolio;
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
     public Investisseur(String nom, String prenom, String email, String password) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.password = password;
+        this.portfolio = new Portfolio();
     }
 
     public String getNom() {
@@ -90,5 +92,21 @@ public class Investisseur {
             throw new IllegalArgumentException("L'email n'existe pas");
         }
         investisseursMap.remove(email);
+    }
+
+    /**
+    *  Buys a specified quantity of a given action and updates the portfolio accordingly.
+    *
+    * @param a the action to buy (must not be null)
+    * @param quantity the quantity to buy (must be positive)
+    */
+    public void buy(Action a, int quantity){
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if(a == null){
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        this.portfolio.addActionQuantity(a, quantity);
     }
 }

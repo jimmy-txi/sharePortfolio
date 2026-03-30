@@ -25,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ActionSimpleTest {
 
+    public static ActionSimple getDefaultActionSimple(){
+        return new ActionSimple("Action1");
+    }
     private static final String FOO_SHARE1 = "Foo Share 1";
     private static final String FOO_SHARE2 = "Foo Share 2";
     private static final Jour jourTest = new Jour(2026,76);
