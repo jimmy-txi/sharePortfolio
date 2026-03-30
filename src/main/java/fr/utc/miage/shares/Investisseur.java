@@ -1,5 +1,5 @@
-/*
- * Copyright 2025 David Navarre &lt;David.Navarre at irit.fr&gt;.
+/*  
+ * Copyright 2025 David Navarre <David.Navarre at irit.fr>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,39 +33,11 @@ public class Investisseur extends Utilisateur {
     // for record transaction buy
     private List<Transaction> transactionsBuy = new ArrayList<>();
 
-    // get transactions sale history
-    public List<Transaction> getTransactionsSale() {
-        return transactionsSale;
-    }
-
-    // add an Action in transaction sale
-    public void addTransactionSale(Transaction transaction) {
-        this.transactionsSale.add(transaction);
-    }
-
-    // get transactions buy history
-    public List<Transaction> getTransactionsBuy() {
-        return transactionsBuy;
-    }
-
-    // add an Action in transaction buy
-    public void addTransactionBuy(Transaction transaction) {
-        this.transactionsBuy.add(transaction);
-    }
-
-    // get all transactions history
-    // [US]: Historique Transactions #3
-    // [Test]: Consulter l'historique des transactions avec des données existantes #64
-    // [Test]: Affichage de l'historique des transactions lorsqu'il est vide #81
-    public Map<String, List<Transaction>> getTransactionsHistory() {
-        Map<String, List<Transaction>> transactionsHistory = new HashMap<>();
-        transactionsHistory.put("sale", this.transactionsSale);
-        transactionsHistory.put("buy", this.transactionsBuy);
-        return transactionsHistory;
-    }
+    // [US-20]: liaison entre investisseur et compte courtier
+    private List<CompteCourtier> comptesCourtiers = new ArrayList<>();
 
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
-    
+
     /**
      * Creates an investor with specified params
      *
@@ -129,8 +101,52 @@ public class Investisseur extends Utilisateur {
         this.prenom = prenom;
     }
 
+    // get transactions sale history
+    public List<Transaction> getTransactionsSale() {
+        return transactionsSale;
+    }
 
+    // add an Action in transaction sale
+    public void addTransactionSale(Transaction transaction) {
+        this.transactionsSale.add(transaction);
+    }
 
+    // get transactions buy history
+    public List<Transaction> getTransactionsBuy() {
+        return transactionsBuy;
+    }
+
+    // add an Action in transaction buy
+    public void addTransactionBuy(Transaction transaction) {
+        this.transactionsBuy.add(transaction);
+    }
+
+    // get all transactions history
+    // [US]: Historique Transactions #3
+    // [Test]: Consulter l'historique des transactions avec des données existantes #64
+    // [Test]: Affichage de l'historique des transactions lorsqu'il est vide #81
+    public Map<String, List<Transaction>> getTransactionsHistory() {
+        Map<String, List<Transaction>> transactionsHistory = new HashMap<>();
+        transactionsHistory.put("sale", this.transactionsSale);
+        transactionsHistory.put("buy", this.transactionsBuy);
+        return transactionsHistory;
+    }
+
+    // [US-20]: make a liaison between investisseur and compte courtier
+    public List<CompteCourtier> getComptesCourtiers() {
+        return comptesCourtiers;
+    }
+
+    // [US-20]: make a liaison between investisseur and compte courtier
+    public void lierCompteCourtier(CompteCourtier compte) {
+        if (compte == null) {
+            throw new IllegalArgumentException("Le compte courtier ne peut pas être null");
+        }
+        if (this.comptesCourtiers.contains(compte)) {
+            throw new IllegalArgumentException("Ce compte courtier est déjà lié à l'investisseur");
+        }
+        this.comptesCourtiers.add(compte);
+    }
 
     @Override
     public String toString() {
@@ -142,6 +158,12 @@ public class Investisseur extends Utilisateur {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    // for SonarQube
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 
     public static Investisseur creerInvestisseur(String nom, String prenom, String email, String password) {
@@ -159,23 +181,21 @@ public class Investisseur extends Utilisateur {
         return nouvelInvestisseur;
     }
 
-    // for SonarQube
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
+    public static void clearInvestisseursMap() {
+        investisseursMap.clear();
     }
 
     /**
-    *  Buys a specified quantity of a given action and updates the portfolio accordingly.
-    *
-    * @param a the action to buy (must not be null)
-    * @param quantity the quantity to buy (must be positive)
-    */
-    public void buy(Action a, int quantity){
-        if(quantity <= 0){
+     *  Buys a specified quantity of a given action and updates the portfolio accordingly.
+     *
+     * @param a the action to buy (must not be null)
+     * @param quantity the quantity to buy (must be positive)
+     */
+    public void buy(Action a, int quantity) {
+        if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
-        if(a == null){
+        if (a == null) {
             throw new IllegalArgumentException("Action cannot be null");
         }
         this.portfolio.addActionQuantity(a, quantity);

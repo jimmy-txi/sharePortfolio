@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 David Navarre &lt;David.Navarre at irit.fr&gt;.
+ * Copyright 2025 David Navarre <David.Navarre at irit.fr>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,18 @@
  */
 package fr.utc.miage.shares;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 class InvestisseurTest {
+
+    @AfterEach
+    void tearDown() { // for clear static map after each test
+        Investisseur.clearInvestisseursMap();
+    }
 
     public static final String FIRST_NAME = "Dupont";
     public static final String LAST_NAME = "Jean";
@@ -38,14 +40,17 @@ class InvestisseurTest {
     public static final String INVALID_EMAIL = "invalid.email.com";
     public static final String EXISTING_EMAIL = "existant@gmail.com";
 
-    public static Investisseur getDefaultInvestisseur() {
-        return new Investisseur("Dupont", FIRST_NAME, EMAIL, PASSWORD);
-    }
+    public static final String COURTIER_NAME = "Boursorama";
+    public static final String COURTIER_IDENTIFIANT = "123456789";
 
+    public static Investisseur getDefaultInvestisseur() {
+        return new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+    }
 
     @Test
     void testConstructeur() {
-        assertDoesNotThrow(() -> new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD), "Constructor should not throw with valid parameters");
+        assertDoesNotThrow(() -> new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD),
+                "Constructor should not throw with valid parameters");
     }
 
     @Test
@@ -59,24 +64,26 @@ class InvestisseurTest {
         );
     }
 
-
-     /**
-     * Tests the constructor of the Investisseur class to ensure it creates an instance without throwing exceptions.
-     */
     @Test
-    void testConstructor() {
-        assertDoesNotThrow(() -> new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD));
+    void testConstructeurFields() {
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        assertAll(
+            "Cree un investisseur avec des champs valides",
+            () -> assertNotNull(investisseur),
+            () -> assertEquals(FIRST_NAME, investisseur.getNom()),
+            () -> assertEquals(LAST_NAME, investisseur.getPrenom()),
+            () -> assertEquals(EMAIL, investisseur.getEmail())
+        );
     }
-
 
     @Test
     void testGetters() {
         Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
         assertAll(
             "Verifie les getters",
-            ()-> assertEquals(LAST_NAME, investisseur.getNom()),
-            ()-> assertEquals(FIRST_NAME, investisseur.getPrenom()),
-            ()-> assertEquals(EMAIL, investisseur.getEmail())
+            () -> assertEquals(LAST_NAME, investisseur.getNom()),
+            () -> assertEquals(FIRST_NAME, investisseur.getPrenom()),
+            () -> assertEquals(EMAIL, investisseur.getEmail())
         );
     }
 
@@ -88,9 +95,21 @@ class InvestisseurTest {
         investisseur.setPassword(NEW_PASSWORD);
         assertAll(
                 "Verifie les setters",
-                ()-> assertEquals(NEW_LAST_NAME, investisseur.getNom()),
-                ()-> assertEquals(NEW_FIRST_NAME, investisseur.getPrenom()),
-                ()-> assertTrue(investisseur.verifierMotDePasse(NEW_PASSWORD))
+                () -> assertEquals(NEW_LAST_NAME, investisseur.getNom()),
+                () -> assertEquals(NEW_FIRST_NAME, investisseur.getPrenom()),
+                () -> assertTrue(investisseur.verifierMotDePasse(NEW_PASSWORD))
+        );
+    }
+
+    @Test
+    void testSettersWithIncorrectValueThrows() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        assertAll(
+                "Verifie que les setters throws",
+                () -> assertThrows(IllegalArgumentException.class, () -> investisseur.setNom(null)),
+                () -> assertThrows(IllegalArgumentException.class, () -> investisseur.setNom("")),
+                () -> assertThrows(IllegalArgumentException.class, () -> investisseur.setPrenom(null)),
+                () -> assertThrows(IllegalArgumentException.class, () -> investisseur.setPrenom(""))
         );
     }
 
@@ -105,6 +124,17 @@ class InvestisseurTest {
         assertEquals("L'email existe déjà", exception.getMessage());
     }
 
+    @Test
+    void testToString() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        assertAll(
+            "Verifie le toString",
+            () -> assertEquals("Investisseur [nom=" + LAST_NAME + ", prenom=" + FIRST_NAME + ", email=" + EMAIL + "]", investisseur.toString())
+        );
+    }
+
+    // --- Transaction History tests ---
+
     private final Investisseur investisseurTest = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
     private final Action actionTestForSale1 = new ActionSimple("ActionTestForSale1");
     private final Action actionTestForSale2 = new ActionSimple("ActionTestForSale2");
@@ -118,7 +148,7 @@ class InvestisseurTest {
 
     @Test
     void addTransactionSale() {
-        assertDoesNotThrow(()->investisseurTest.addTransactionSale(new Transaction(actionTestForSale1, new Jour(2026, 1), 10.0f)));
+        assertDoesNotThrow(() -> investisseurTest.addTransactionSale(new Transaction(actionTestForSale1, new Jour(2026, 1), 10.0f)));
     }
 
     @Test
@@ -128,10 +158,9 @@ class InvestisseurTest {
 
     @Test
     void addTransactionBuy() {
-        assertDoesNotThrow(()->investisseurTest.addTransactionBuy(new Transaction(actionTestForBuy1, new Jour(2026, 1), 15.0f)));
+        assertDoesNotThrow(() -> investisseurTest.addTransactionBuy(new Transaction(actionTestForBuy1, new Jour(2026, 1), 15.0f)));
     }
 
-    // get all transactions history
     // [US]: Historique Transactions #3
     // [Test]: Consulter l'historique des transactions avec des données existantes #64
     @Test
@@ -148,10 +177,10 @@ class InvestisseurTest {
 
         assertAll(
             "Verifie l'historique des transactions",
-            ()-> assertEquals(tSale1, investisseurTest.getTransactionsHistory().get("sale").get(0)),
-            ()-> assertEquals(tSale2, investisseurTest.getTransactionsHistory().get("sale").get(1)),
-            ()-> assertEquals(tBuy1, investisseurTest.getTransactionsHistory().get("buy").get(0)),
-            ()-> assertEquals(tBuy2, investisseurTest.getTransactionsHistory().get("buy").get(1))
+            () -> assertEquals(tSale1, investisseurTest.getTransactionsHistory().get("sale").get(0)),
+            () -> assertEquals(tSale2, investisseurTest.getTransactionsHistory().get("sale").get(1)),
+            () -> assertEquals(tBuy1, investisseurTest.getTransactionsHistory().get("buy").get(0)),
+            () -> assertEquals(tBuy2, investisseurTest.getTransactionsHistory().get("buy").get(1))
         );
     }
 
@@ -160,11 +189,12 @@ class InvestisseurTest {
     void getTransactionsHistoryEmpty() {
         assertAll(
             "Verifie l'historique des transactions",
-            ()-> assertEquals(0, investisseurTest.getTransactionsHistory().get("sale").size()),
-            ()-> assertEquals(0, investisseurTest.getTransactionsHistory().get("buy").size())
+            () -> assertEquals(0, investisseurTest.getTransactionsHistory().get("sale").size()),
+            () -> assertEquals(0, investisseurTest.getTransactionsHistory().get("buy").size())
         );
     }
 
+    // --- Reset Password tests ---
 
     @Test
     void testResetPasswordValide() {
@@ -173,29 +203,39 @@ class InvestisseurTest {
         assertNotEquals("password123", newPassword);
     }
 
+    // --- Broker Account Liaison tests (US-20) ---
+
+    // [Test-63]: Liaison réussie d'un compte courtier à un investisseur
     @Test
-    void testSettersWithIncorrectValueThrows() {
-        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+    void testLierCompteCourtierValide() {
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        CompteCourtier compte = new CompteCourtier(COURTIER_NAME, COURTIER_IDENTIFIANT);
+        investisseur.lierCompteCourtier(compte);
         assertAll(
-                "Verifie que les setters throws",
-                ()-> assertThrows(IllegalArgumentException.class, () -> investisseur.setNom(null)),
-                ()-> assertThrows(IllegalArgumentException.class, () -> investisseur.setNom("")),
-                ()-> assertThrows(IllegalArgumentException.class, () -> investisseur.setPrenom(null)),
-                ()-> assertThrows(IllegalArgumentException.class, () -> investisseur.setPrenom(""))
+            "Liaison réussie d'un compte courtier",
+            () -> assertEquals(1, investisseur.getComptesCourtiers().size()),
+            () -> assertEquals(compte, investisseur.getComptesCourtiers().get(0))
         );
     }
 
-    @Test
-    void testToString() {
-        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
-        assertAll(
-            "Verifie le toString",
-            ()-> assertEquals("Investisseur [nom=" + LAST_NAME + ", prenom=" + FIRST_NAME + ", email=" + EMAIL + "]", investisseur.toString())
 
+    // [Test-77]: Échec de liaison - compte courtier déjà lié
+    @Test
+    void testLierCompteCourtierDejaLie() {
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        CompteCourtier compte = new CompteCourtier(COURTIER_NAME, COURTIER_IDENTIFIANT);
+        investisseur.lierCompteCourtier(compte);
+        
+        CompteCourtier memeCompte = new CompteCourtier(COURTIER_NAME, COURTIER_IDENTIFIANT);
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> investisseur.lierCompteCourtier(memeCompte)
         );
     }
 
-     /**
+    // --- Buy tests ---
+
+    /**
      * Tests the buy method of the Investor class to ensure it throws an IllegalArgumentException when a negative quantity is provided.
      */
     @Test
@@ -206,17 +246,19 @@ class InvestisseurTest {
     }
 
     @Test
-    void testBuy(){
+    void testBuy() {
         Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
-        Action action  = ActionSimpleTest.getDefaultActionSimple();
+        Action action = ActionSimpleTest.getDefaultActionSimple();
         assertDoesNotThrow(() -> investisseur.buy(action, 1));
     }
 
     @Test
-    void testBuyNullAction(){
+    void testBuyNullAction() {
         Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
         assertThrows(IllegalArgumentException.class, () -> investisseur.buy(null, 1));
     }
+
+    // --- Equals / HashCode tests ---
 
     @Test
     void testEqualsWithSameReturnsTrue() {
