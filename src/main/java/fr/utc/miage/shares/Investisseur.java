@@ -84,6 +84,16 @@ public class Investisseur {
         return nouvelInvestisseur;
     }
 
+    public static void deleteInvestisseur(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("L'email ne peut pas être null");
+        }
+        if (!investisseursMap.containsKey(email)) {
+            throw new IllegalArgumentException("L'email n'existe pas");
+        }
+        investisseursMap.remove(email);
+    }
+
     /**
     *  Buys a specified quantity of a given action and updates the portfolio accordingly.
     *
