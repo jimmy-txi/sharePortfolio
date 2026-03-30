@@ -38,7 +38,12 @@ public class ActionSimple extends Action {
         this.mapCours = new HashMap<>();
     }
 
-    // enrg possible si pas de cours pour ce jour
+    /**
+     * Enregistre le cours de l'action pour un jour donné.
+     * @param j le jour pour lequel enregistrer le cours
+     * @param v le cours de l'action à enregistrer
+     * @throws IllegalArgumentException si le jour est après aujourd'hui, si le jour existe déjà ou si la valeur est négative ou nulle
+     */
     public void enrgCours(final Jour j, final float v) {
         if (j.isAfterToday()){
             throw new IllegalArgumentException("Date after today");
@@ -52,7 +57,6 @@ public class ActionSimple extends Action {
         } else {
             throw new IllegalArgumentException("Value out of range");
         }
-
     }
 
     @Override
@@ -74,5 +78,24 @@ public class ActionSimple extends Action {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    /**
+     * Renvoie l'évolution du cours de l'action entre deux jours donnés en pourcentage.
+     * @param j1 le premier jour
+     * @param j2 le deuxième jour
+     * @return l'évolution du cours de l'action entre les deux jours en pourcentage
+     * @throws IllegalArgumentException si l'un des jours est après aujourd'hui ou si l'un des jours n'existe pas pour cette action
+    */
+    public float getEvolutionCours(Jour j1, Jour j2) {
+        if (j1.isAfterToday() || j2.isAfterToday()){
+            throw new IllegalArgumentException("Date after today");
+        }
+        if (!mapCours.containsKey(j1) || !mapCours.containsKey(j2)) {
+            throw new IllegalArgumentException("Date not exist for this action");
+        }
+        float value1 = this.mapCours.get(j1);
+        float value2 = this.mapCours.get(j2);
+        return (value2 - value1) / value1 * 100;
     }
 }

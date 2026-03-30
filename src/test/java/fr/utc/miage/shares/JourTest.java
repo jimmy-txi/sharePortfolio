@@ -76,7 +76,7 @@ class JourTest {
     void testEqualsWithEqualObjectShouldWork() {
         final Jour jour1 = getDefaultJour();
 
-        assertEquals(jour1, jour1, "An Object Jour shouldbe equals to itself");
+        assertEquals(jour1, jour1, "An Object Jour should be equals to itself");
     }
 
     @Test
