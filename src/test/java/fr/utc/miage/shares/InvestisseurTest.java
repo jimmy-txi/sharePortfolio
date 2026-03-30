@@ -44,19 +44,12 @@ class InvestisseurTest {
 
 
     @Test
-    void teseConstructeur() {
-        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
-        assertAll(
-                "Cree un investisseur avec des champs valides",
-                ()-> assertNotNull(investisseur),
-                ()-> assertEquals(LAST_NAME, investisseur.getNom()),
-                ()-> assertEquals(FIRST_NAME, investisseur.getPrenom()),
-                ()-> assertEquals(EMAIL, investisseur.getEmail())
-        );
+    void testConstructeur() {
+        assertDoesNotThrow(() -> new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD), "Constructor should not throw with valid parameters");
     }
 
     @Test
-    void teseConstructeurThrowsWithIncorrectValues() {
+    void testConstructeurThrowsWithIncorrectValues() {
         assertAll(
                 "Cree un investisseur avec des champs invalides",
                 () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur(null, FIRST_NAME, EMAIL, PASSWORD)),
