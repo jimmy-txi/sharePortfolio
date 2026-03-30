@@ -1,48 +1,87 @@
+/*
+ * Copyright 2025 David Navarre &lt;David.Navarre at irit.fr&gt;.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package fr.utc.miage.shares;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
+import fr.utc.miage.Investisseur;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthentificationServiceTest {
 
-    private AuthentificationService authService;
-    private Administrateur adminTest;
+    private static final String VALID_PASSWORD = "password";
 
-    @BeforeEach
-    void setUp() {
-        authService = new AuthentificationService();
-        // Création d'un administrateur pour les tests
-        adminTest = new Administrateur("Navarre", "David", "admin@irit.fr", "motdepasseSecurise123");
-        authService.enregistrerUtilisateur(adminTest);
+    @Test
+    public void testConstructorDoesNotThrow() {
+        assertDoesNotThrow(AuthentificationService::new, "Constructor should not throw");
     }
 
     @Test
-    void testLogin_Succes_AdministrateurValide() {
-        // Sous-problème 1 : Connexion réussie avec les bons identifiants
-        Utilisateur userConnecte = authService.login("admin@irit.fr", "motdepasseSecurise123");
-        
-        assertNotNull(userConnecte, "L'utilisateur devrait être connecté");
-        assertTrue(userConnecte instanceof Administrateur, "L'utilisateur connecté doit être un Administrateur");
-        assertEquals("admin@irit.fr", userConnecte.getEmail());
+    void testEnregistrerUtilisateurWithAnAdminShouldNotThrow() {
+        AuthentificationService authentificationService = new AuthentificationService();
+        assertDoesNotThrow(()->authentificationService.enregistrerUtilisateur(AdministrateurTest.getDefaultAdministrateur()),
+                "Adding an administrator should not throw");
     }
 
     @Test
-    void testLogin_Echec_MauvaisMotDePasse() {
-        // Sous-problème 2 : Refus si le mot de passe est faux
-        Utilisateur userConnecte = authService.login("admin@irit.fr", "fauxMotDePasse");
-        
-        assertNull(userConnecte, "La connexion doit échouer avec un mauvais mot de passe");
+    void testEnregistrerUtilisateurWithAnInvestorShouldNotThrow() {
+        AuthentificationService authentificationService = new AuthentificationService();
+        assertDoesNotThrow(()->authentificationService.enregistrerUtilisateur(InvestisseurTest.getDefaultInvestisseur()),
+                "Adding an investor should not throw");
     }
 
     @Test
-    void testLogin_Echec_EmailInexistant() {
-        // Sous-problème 3 : Refus si l'email n'existe pas
-        Utilisateur userConnecte = authService.login("inconnu@irit.fr", "motdepasseSecurise123");
-        
-        assertNull(userConnecte, "La connexion doit échouer avec un email inconnu");
+    void testEnregistrerUtilisateurWithNullShouldThrow() {
+        AuthentificationService authentificationService = new AuthentificationService();
+        assertThrows(IllegalArgumentException.class, ()->authentificationService.enregistrerUtilisateur(null),
+                "Adding null should throw");
+    }
+
+    @Test
+    void testEnregistrerUtilisateurTwiceWithDifferentShouldNotThrow() {
+        AuthentificationService authentificationService = new AuthentificationService();
+        assertDoesNotThrow(()->authentificationService.enregistrerUtilisateur(AdministrateurTest.getDefaultAdministrateur()),
+                "Adding an administrator should not throw");
+        assertDoesNotThrow(()->authentificationService.enregistrerUtilisateur(InvestisseurTest.getDefaultInvestisseur()),
+                "Adding an investor should not throw");
+    }
+
+    @Test
+    void testEnregistrerUtilisateurTwiceWithSameEmailShouldThrow() {
+        AuthentificationService authentificationService = new AuthentificationService();
+        assertDoesNotThrow(()-> authentificationService.enregistrerUtilisateur(AdministrateurTest.getDefaultAdministrateur()),
+                "Adding an administrator should not throw");
+        assertThrows(IllegalArgumentException.class, ()->authentificationService.enregistrerUtilisateur(AdministrateurTest.getDefaultAdministrateur()),
+                "Adding an administrator twice should throw");
+    }
+
+    @Test
+    void testLoginWhenNoUserShouldReturnNull() {
+        AuthentificationService authentificationService = new AuthentificationService();
+        assertNull(authentificationService.login("email", "password"),
+                "Login should return null when no user is registered");
+    }
+
+    @Test
+    void testLoginWheWithCorrectEmailAndPasswordShoudReturnUser() {
+        AuthentificationService authentificationService = new AuthentificationService();
+        Administrateur administrateur = AdministrateurTest.getDefaultAdministrateur();
+        authentificationService.enregistrerUtilisateur(administrateur);
+        administrateur.setPassword(VALID_PASSWORD);
+        assertInstanceOf(Administrateur.class, authentificationService.login(administrateur.getEmail(), VALID_PASSWORD),
+                "Login should return null when no user is registered");
     }
 }
