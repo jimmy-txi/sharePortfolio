@@ -26,4 +26,16 @@ public class Administrateur extends Utilisateur {
     public Administrateur(String email, String password) {
         super(email, password);
     }
+
+    // Pour sonar
+    /**
+     * Determines if this administrateur is equals to other
+     *
+     * @param o the other one to compare to
+     * @return true if his administrateur is equals to other
+     */
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }

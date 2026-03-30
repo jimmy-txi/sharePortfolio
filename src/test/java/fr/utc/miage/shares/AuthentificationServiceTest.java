@@ -19,12 +19,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AuthentificationServiceTest {
+class AuthentificationServiceTest {
 
     private static final String VALID_PASSWORD = "password";
 
     @Test
-    public void testConstructorDoesNotThrow() {
+    void testConstructorDoesNotThrow() {
         assertDoesNotThrow(AuthentificationService::new, "Constructor should not throw");
     }
 
@@ -61,9 +61,10 @@ public class AuthentificationServiceTest {
     @Test
     void testEnregistrerUtilisateurTwiceWithSameEmailShouldThrow() {
         AuthentificationService authentificationService = new AuthentificationService();
-        assertDoesNotThrow(()-> authentificationService.enregistrerUtilisateur(AdministrateurTest.getDefaultAdministrateur()),
+        Utilisateur u = AdministrateurTest.getDefaultAdministrateur();
+        assertDoesNotThrow(()-> authentificationService.enregistrerUtilisateur(u),
                 "Adding an administrator should not throw");
-        assertThrows(IllegalArgumentException.class, ()->authentificationService.enregistrerUtilisateur(AdministrateurTest.getDefaultAdministrateur()),
+        assertThrows(IllegalArgumentException.class, ()->authentificationService.enregistrerUtilisateur(u),
                 "Adding an administrator twice should throw");
     }
 

@@ -1,5 +1,7 @@
 package fr.utc.miage.shares;
 
+import java.util.Objects;
+
 public abstract class Utilisateur {
     private final String email;
     private String password;
@@ -10,7 +12,7 @@ public abstract class Utilisateur {
      * @param email The user's email, not null, respects a regex
      * @param password The user's password, not null, not empty
      */
-    public Utilisateur(String email, String password) {
+    protected Utilisateur(String email, String password) {
         if (email == null || password == null) {
             throw new IllegalArgumentException("Tous les champs doivent être remplis");
         }
@@ -54,5 +56,16 @@ public abstract class Utilisateur {
             throw new IllegalArgumentException("Le password n'est pas valide");
         }
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Utilisateur that)) return false;
+        return Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(email);
     }
 }
