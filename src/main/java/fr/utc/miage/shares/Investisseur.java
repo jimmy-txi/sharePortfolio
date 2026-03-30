@@ -65,6 +65,12 @@ public class Investisseur {
         this.password = password;
     }
 
+
+    /**
+    *  reset a password of an investisseur and return the new password.
+    * @return the new password
+    * @throws IllegalArgumentException if the email is not set
+    *   */
     public String ResetPassword() {
         if (this.email == null) {
             throw new IllegalArgumentException("L'email doit être renseigné pour réinitialiser le mot de passe");
