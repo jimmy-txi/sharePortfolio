@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 David Navarre &lt;David.Navarre at irit.fr&gt;.
+ * Copyright 2025 David Navarre <David.Navarre at irit.fr>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,115 +15,122 @@
  */
 package fr.utc.miage.shares;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-
-public class Investisseur {
-
-    private Random random = new Random();
+public class Investisseur extends Utilisateur {
     private String nom;
     private String prenom;
-    private String email;
-    private String password;
-    private Portfolio portfolio;
+    private final Portfolio portfolio;
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
+
+    /**
+     * Creates an investor with specified params
+     *
+     * @param nom The investor's name, not null, not empty
+     * @param prenom The investor's first name, not null, not empty
+     * @param email The investor's email, not null, respects a regex
+     * @param password The investor's password, not null, not empty
+     */
     public Investisseur(String nom, String prenom, String email, String password) {
+        super(email, password);
+        if (nom == null || prenom == null) {
+            throw new IllegalArgumentException("Nom and prenom cannot be null");
+        }
+        if (nom.isEmpty() || prenom.isEmpty()) {
+            throw new IllegalArgumentException("Nom and prenom cannot be empty");
+        }
         this.nom = nom;
         this.prenom = prenom;
-        this.email = email;
-        this.password = password;
         this.portfolio = new Portfolio();
     }
 
+    /**
+     * Gets the name of the investor
+     *
+     * @return the name of the investor
+     */
     public String getNom() {
         return nom;
     }
 
+    /**
+     * Sets the name of the investor
+     *
+     * @param nom the name of the investor, not null
+     */
     public void setNom(String nom) {
+        if (nom == null || nom.isEmpty()) {
+            throw new IllegalArgumentException("Nom cannot be null or empty");
+        }
         this.nom = nom;
     }
 
+    /**
+     * Gets the first name of the investor
+     *
+     * @return the first name of the investor
+     */
     public String getPrenom() {
         return prenom;
     }
 
+    /**
+     * Sets the first name of the investor
+     *
+     * @param prenom the first name of the investor, not null
+     */
     public void setPrenom(String prenom) {
+        if (prenom == null || prenom.isEmpty()) {
+            throw new IllegalArgumentException("Prenom cannot be null or empty");
+        }
         this.prenom = prenom;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
-    /**
-    *  reset a password of an investisseur and return the new password.
-    * @return the new password
-    * @throws IllegalArgumentException if the email is not set
-    *   */
-    public String resetPassword() {
-        if (this.email == null) {
-            throw new IllegalArgumentException("L'email doit être renseigné pour réinitialiser le mot de passe");
-        }   
-            byte[] array = new byte[7];
-            
-            random.nextBytes(array);            
-            String newPassword = new String(array, StandardCharsets.UTF_8);
-            this.setPassword(newPassword);
-            return newPassword;
-    }
-
-
     @Override
     public String toString() {
-        return "Investisseur [nom=" + nom + ", prenom=" + prenom + ", email=" + email + ", password=" + password
+        return "Investisseur [nom=" + nom + ", prenom=" + prenom + ", email=" + getEmail()
                 + "]";
     }
 
-    public static Investisseur creerInvestisseur(String nom, String prenom, String email, String password) {
-        if (email == null || password == null || nom == null || prenom == null) {
-            throw new IllegalArgumentException("Tous les champs doivent être remplis");
-        }
-        if (!email.contains("@")) {
-            throw new IllegalArgumentException("L'email n'est pas valide");
-        }
-        if (investisseursMap.containsKey(email)) {
-            throw new IllegalArgumentException("L'email existe déjà");
-        } 
-        Investisseur nouvelInvestisseur = new Investisseur(nom, prenom, email, password);
-        investisseursMap.put(email, nouvelInvestisseur);
-        return nouvelInvestisseur;
+    // for SonarQube
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    // for SonarQube
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 
     public static void clearInvestisseursMap() {
         investisseursMap.clear();
     }
 
+    public static Investisseur creerInvestisseur(String nom, String prenom, String email, String password) {
+        if (investisseursMap.containsKey(email)) {
+            throw new IllegalArgumentException("L'email existe déjà");
+        }
+        Investisseur nouvelInvestisseur = new Investisseur(nom, prenom, email, password);
+        investisseursMap.put(email, nouvelInvestisseur);
+        return nouvelInvestisseur;
+    }
+
     /**
-     * [US-30]: Authentifie un investisseur avec son email et mot de passe.
-     * @param email l'email de l'investisseur
-     * @param password le mot de passe
-     * @return l'investisseur si les credentials sont valides
-     * @throws IllegalArgumentException si les credentials sont invalides
+     * [US-30]: Authentifie un investisseur with his email and password.
+     * @param email the investor's email
+     * @param password the password
+     * @return the investor if credentials are valid
+     * @throws IllegalArgumentException if credentials are invalid
      */
     public static Investisseur authentifier(String email, String password) {
         if (email == null || password == null) {
             throw new IllegalArgumentException("L'email et le mot de passe ne peuvent pas être null");
         }
         Investisseur investisseur = investisseursMap.get(email);
-        if (investisseur == null || !investisseur.getPassword().equals(password)) {
+        if (investisseur == null || !investisseur.verifierMotDePasse(password)) {
             throw new IllegalArgumentException("Email ou mot de passe incorrect");
         }
         return investisseur;

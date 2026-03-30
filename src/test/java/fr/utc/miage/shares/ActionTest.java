@@ -76,7 +76,7 @@ class ActionTest {
     void testEqualsWithObjectFromOtherClass() {
         final Action action1 = new ActionImpl(FOO_SHARE1);
         final Integer action2 = 0;
-        Assertions.assertNotSame(action2, action1);
+        Assertions.assertNotEquals(action1, action2);
     }
 
     @Test
