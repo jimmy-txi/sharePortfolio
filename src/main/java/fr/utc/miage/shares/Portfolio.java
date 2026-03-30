@@ -59,6 +59,11 @@ public class Portfolio {
         this.actions.put(action, this.actions.getOrDefault(action, 0) + quantity);
     }
 
+    /**
+     * Removes a specified quantity of an action from the portfolio.
+     * @param a the action to remove (must not be null)
+     * @param quantity the quantity to remove (must be positive and less than or equal to the quantity owned)
+     */
     public void removeActionQuantity(Action a, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
