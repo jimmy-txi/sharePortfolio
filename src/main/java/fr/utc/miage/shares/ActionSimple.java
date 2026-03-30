@@ -52,7 +52,6 @@ public class ActionSimple extends Action {
         } else {
             throw new IllegalArgumentException("Value out of range");
         }
-
     }
 
     @Override
