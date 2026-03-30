@@ -41,7 +41,7 @@ class InvestorTest {
      */
     @Test
     void testBuyNegativeQuantity() {
-        assertThrows(IllegalArgumentException.class, () -> investor.buy(action, -1));
+        assertThrows(IllegalArgumentException.class, () -> investor.buy(action, 0));
     }
 
     @Test

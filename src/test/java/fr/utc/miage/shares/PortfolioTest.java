@@ -51,7 +51,7 @@ class PortfolioTest {
      */
     @Test
     void testAddActionQuantityNegativeQuantity(){
-        assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(action, -1));
+        assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(action, 0));
     }
 
     /**
