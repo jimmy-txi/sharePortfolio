@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.utc.miage;
+package fr.utc.miage.shares;
 
-import fr.utc.miage.shares.Action;
-import fr.utc.miage.shares.ActionSimple;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -190,7 +188,7 @@ class InvestisseurTest {
     @Test
     void testResetPasswordEmailInexistant() {
         Investisseur investisseur = new Investisseur("Dupont", "Jean", null, "password123");
-        assertThrows(IllegalArgumentException.class, () -> investisseur.resetPassword());
+        assertThrows(IllegalArgumentException.class, investisseur::resetPassword);
     }
 
     @Test
