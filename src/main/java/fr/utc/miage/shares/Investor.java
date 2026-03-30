@@ -25,7 +25,7 @@ public class Investor {
     private Portfolio portfolio;
     
     /**
-    * Builds an Investor object with a specified portfolio.
+    * Builds an Investor object.
     *
     */
     public Investor() {
@@ -35,14 +35,16 @@ public class Investor {
     /**
     *  Buys a specified quantity of a given action and updates the portfolio accordingly.
     *
-    * @param a the action to buy
-    * @param quantity the quantity to buy
+    * @param a the action to buy (must not be null)
+    * @param quantity the quantity to buy (must be positive)
     */
     public void buy(Action a, int quantity){
         if(quantity <= 0){
-            throw new IllegalArgumentException("Quantity must be greater than 0");
-        }else{
-            this.portfolio.addActionQuantity(a, quantity);
+            throw new IllegalArgumentException("Quantity must be positive");
         }
+        if(a == null){
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        this.portfolio.addActionQuantity(a, quantity);
     }
 }

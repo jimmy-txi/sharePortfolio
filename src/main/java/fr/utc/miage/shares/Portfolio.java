@@ -46,11 +46,11 @@ public class Portfolio {
 
     /** 
     * Adds a specified quantity of an action to the portfolio.
-    * @param action the action to add
-    * @param quantity the quantity to add
+    * @param action the action to add (must not be null)
+    * @param quantity the quantity to add (must be positive)
     */
     public void addActionQuantity(Action action, Integer quantity) {
-        if (quantity < 0) {
+        if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
         if (action == null) {
