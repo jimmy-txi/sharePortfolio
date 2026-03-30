@@ -15,7 +15,6 @@
  */
 package fr.utc.miage.shares;
 
-import fr.utc.miage.Investisseur;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,5 +82,15 @@ public class AuthentificationServiceTest {
         administrateur.setPassword(VALID_PASSWORD);
         assertInstanceOf(Administrateur.class, authentificationService.login(administrateur.getEmail(), VALID_PASSWORD),
                 "Login should return null when no user is registered");
+    }
+
+    @Test
+    void testLoginWheWithCorrectEmailAndWrongPasswordShoudReturnNull() {
+        AuthentificationService authentificationService = new AuthentificationService();
+        Administrateur administrateur = AdministrateurTest.getDefaultAdministrateur();
+        authentificationService.enregistrerUtilisateur(administrateur);
+        administrateur.setPassword(VALID_PASSWORD);
+        assertNull(authentificationService.login(administrateur.getEmail(), ""),
+                "Login should return null when password is wrong");
     }
 }

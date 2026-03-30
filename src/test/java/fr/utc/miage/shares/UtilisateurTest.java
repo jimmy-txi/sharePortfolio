@@ -62,7 +62,7 @@ public class UtilisateurTest {
     @Test
     void testVerifierMotDePasseReturnsFalseWithCorrectPassword() {
         Utilisateur u = new UtilisateurImpl(VALID_EMAIL, VALID_PASSWORD);
-        assertTrue(u.verifierMotDePasse(""), "getEmail should return false with a wrong password");
+        assertFalse(u.verifierMotDePasse(""), "verifierMotDePasse should return false with a wrong password");
     }
 
     @Test

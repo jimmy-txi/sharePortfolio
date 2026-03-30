@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.utc.miage;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import fr.utc.miage.shares.Utilisateur;
+package fr.utc.miage.shares;
 
 public class Investisseur extends Utilisateur {
     private String nom;
     private String prenom;
+    private final Portfolio portfolio;
 
     /**
      * Creates an investor with specified params
@@ -42,6 +38,7 @@ public class Investisseur extends Utilisateur {
         }
         this.nom = nom;
         this.prenom = prenom;
+        this.portfolio = new Portfolio();
     }
 
     /**
@@ -90,5 +87,20 @@ public class Investisseur extends Utilisateur {
     public String toString() {
         return "Investisseur [nom=" + nom + ", prenom=" + prenom + ", email=" + getEmail()
                 + "]";
+    }
+    /**
+    *  Buys a specified quantity of a given action and updates the portfolio accordingly.
+    *
+    * @param a the action to buy (must not be null)
+    * @param quantity the quantity to buy (must be positive)
+    */
+    public void buy(Action a, int quantity){
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if(a == null){
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        this.portfolio.addActionQuantity(a, quantity);
     }
 }
