@@ -15,8 +15,11 @@
  */
 package fr.utc.miage;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
 
 public class Investisseur {
     private String nom;
@@ -58,6 +61,17 @@ public class Investisseur {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String ResetPassword() {
+        if (this.email == null) {
+            throw new IllegalArgumentException("L'email doit être renseigné pour réinitialiser le mot de passe");
+        }   
+            byte[] array = new byte[7];
+            new Random().nextBytes(array);            
+            String newPassword = new String(array, Charset.forName("UTF-8"));
+            this.setPassword(newPassword);
+            return newPassword;
     }
 
 
