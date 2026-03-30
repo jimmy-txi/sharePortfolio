@@ -17,6 +17,8 @@ package fr.utc.miage.shares;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,24 +28,78 @@ class ActionSimpleTest {
     public static ActionSimple getDefaultActionSimple(){
         return new ActionSimple("Action1");
     }
+    private static final String FOO_SHARE1 = "Foo Share 1";
+    private static final String FOO_SHARE2 = "Foo Share 2";
+    private static final Jour jourTest = new Jour(2026,76);
 
+    // for method enrgCours()
     @Test
     void testEnregistreActionReussir() {
-        final ActionSimple action = getDefaultActionSimple();
-        final Jour jour = new Jour(2026,76);
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
         assertAll(
                 "Enregistrer une Action Pas Réussir",
-                () -> assertDoesNotThrow(() -> action.enrgCours(jour,150.00f)),
-                () -> assertEquals(150.00f,action.valeur(jour))
+                () -> assertDoesNotThrow(() -> action.enrgCours(jourTest, 150.00f)),
+                () -> assertEquals(150.00f, action.valeur(jourTest))
+        );
+    }
+
+    // for method enrgCours()
+    @Test
+    void testEnregistrerJourAfterTodayThrowException() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        final LocalDate dateAfterToday = LocalDate.now().plusDays(10);
+        final Jour jourAfterToday = new Jour(dateAfterToday.getYear(), dateAfterToday.getDayOfYear());
+        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jourAfterToday, 150.00f), "Make sure if input a date after today throw an Exception");
+    }
+
+    // for method enrgCours()
+    @Test
+    void testEnregistrerJourExistantThrowException() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        action.enrgCours(jourTest, 150.00f);
+        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jourTest, 150.00f), "Make sure do not save same date");
+
+    }
+
+    // for method enrgCours()
+    @Test
+    void testSaveActionValueNegative() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        final float value = -100f;
+        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jourTest, value));
+    }
+
+    @Test
+    void testConsultationPrixInexistantRetourner0() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        assertDoesNotThrow(() -> action.valeur(jourTest));
+        assertEquals(0, action.valeur(jourTest));
+    }
+
+    @Test
+    void testEquals() {
+        final ActionSimple action1 = new ActionSimple(FOO_SHARE1);
+        final ActionSimple action2 = new ActionSimple(FOO_SHARE1);
+        final ActionSimple action3 = new ActionSimple(FOO_SHARE2);
+
+        assertAll(
+                "ActionSimple equality should depend on the label",
+                () -> assertEquals(action1, action2),
+                () -> assertNotEquals(action1, action3),
+                () -> assertNotEquals(null, action1)
         );
     }
 
     @Test
-    void testConsultationPrixInexistantRetourner0(){
-        final ActionSimple action = getDefaultActionSimple();
-        final Jour jour = new Jour(2026,76);
-        assertDoesNotThrow(() -> action.valeur(jour));
-        assertEquals(0,action.valeur(jour));
+    void testHashCode() {
+        final ActionSimple action1 = new ActionSimple(FOO_SHARE1);
+        final ActionSimple action2 = new ActionSimple(FOO_SHARE1);
+
+        assertAll(
+                "ActionSimple hashCode should be stable and consistent with equals",
+                () -> assertDoesNotThrow(action1::hashCode),
+                () -> assertEquals(action1.hashCode(), action2.hashCode())
+        );
     }
 
 }

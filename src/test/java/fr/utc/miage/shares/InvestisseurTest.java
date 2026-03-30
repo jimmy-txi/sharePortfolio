@@ -24,7 +24,34 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import fr.utc.miage.Investisseur;
+
+
+
 class InvestisseurTest {
+
+    public static final String FIRST_NAME = "Dupont";
+    public static final String LAST_NAME = "Jean";
+    public static final String EMAIL = "user1@gmail.com";
+    public static final String PASSWORD = "password123";
+
+    public static final String NEW_FIRST_NAME = "Martin";
+    public static final String NEW_LAST_NAME = "Paul";
+    public static final String NEW_PASSWORD = "password456";
+
+    public static final String INVALID_EMAIL = "invalid.email.com";
+    public static final String EXISTING_EMAIL = "existant@gmail.com";
+
+    @Test
+    void teseConstructeur() {
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        assertAll(
+            "Cree un investisseur avec des champs valides",
+            ()-> assertNotNull(investisseur),
+            ()-> assertEquals(FIRST_NAME, investisseur.getNom()),
+            ()-> assertEquals(LAST_NAME, investisseur.getPrenom()),
+            ()-> assertEquals(EMAIL, investisseur.getEmail()),
+            ()-> assertEquals(PASSWORD, investisseur.getPassword())
 
      /**
      * Tests the constructor of the Investisseur class to ensure it creates an instance without throwing exceptions.
@@ -37,50 +64,50 @@ class InvestisseurTest {
 
     @Test
     void testGetters() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
         assertAll(
             "Verifie les getters",
-            ()-> assertEquals("Dupont", investisseur.getNom()),
-            ()-> assertEquals("Jean", investisseur.getPrenom()),
-            ()-> assertEquals("1@gmail.com", investisseur.getEmail()),
-            ()-> assertEquals("password123", investisseur.getPassword())
+            ()-> assertEquals(FIRST_NAME, investisseur.getNom()),
+            ()-> assertEquals(LAST_NAME, investisseur.getPrenom()),
+            ()-> assertEquals(EMAIL, investisseur.getEmail()),
+            ()-> assertEquals(PASSWORD, investisseur.getPassword())
         );
     }
 
     @Test
     void testSetters() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
-        investisseur.setNom("Martin");
-        investisseur.setPrenom("Paul");
-        investisseur.setPassword("password456");
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
+        investisseur.setNom(NEW_FIRST_NAME);
+        investisseur.setPrenom(NEW_LAST_NAME);
+        investisseur.setPassword(NEW_PASSWORD);
         assertAll(
             "Cree un ",
-            ()-> assertEquals("Martin", investisseur.getNom()),
-            ()-> assertEquals("Paul", investisseur.getPrenom()),
-            ()-> assertEquals("password456", investisseur.getPassword())
+            ()-> assertEquals(NEW_FIRST_NAME, investisseur.getNom()),
+            ()-> assertEquals(NEW_LAST_NAME, investisseur.getPrenom()),
+            ()-> assertEquals(NEW_PASSWORD, investisseur.getPassword())
         );
     }
 
     @Test
     void testToString() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
         assertAll(
             "Verifie le toString",
-            ()-> assertEquals("Investisseur [nom=Dupont, prenom=Jean, email=1@gmail.com, password=password123]", investisseur.toString())
+            ()-> assertEquals("Investisseur [nom=Dupont, prenom=Jean, email=user1@gmail.com, password=password123]", investisseur.toString())
 
         );
     }
 
     @Test
     void testCreerInvestisseurValide() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        Investisseur investisseur = Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
         assertAll(
             "Cree un ",
             ()-> assertNotNull(investisseur),
-            ()-> assertEquals("Dupont", investisseur.getNom()),
-            ()-> assertEquals("Jean", investisseur.getPrenom()),
-            ()-> assertEquals("1@gmail.com", investisseur.getEmail()),
-            ()-> assertEquals("password123", investisseur.getPassword())
+            ()-> assertEquals(FIRST_NAME, investisseur.getNom()),
+            ()-> assertEquals(LAST_NAME, investisseur.getPrenom()),
+            ()-> assertEquals(EMAIL, investisseur.getEmail()),
+            ()-> assertEquals(PASSWORD, investisseur.getPassword())
 
         );
     }
@@ -89,7 +116,7 @@ class InvestisseurTest {
     void testCreerInvestisseurEmailInvalide() {
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class, 
-            () -> Investisseur.creerInvestisseur("Dupont", "Jean", "emailSansArobase.com", "password123")
+            () -> Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, INVALID_EMAIL, PASSWORD)
         );
         assertEquals("L'email n'est pas valide", exception.getMessage());
     }
@@ -98,20 +125,20 @@ class InvestisseurTest {
     void testCreerInvestisseurChampsNuls() {
         assertAll(
             "Cree un investisseur avec des champs nuls",
-            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.creerInvestisseur(null, "Jean", "1@gmail.com", "password123")),
-            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.creerInvestisseur("Dupont", null, "1@gmail.com", "password123")),
-            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.creerInvestisseur("Dupont", "Jean", null, "password123")),
-            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.creerInvestisseur("Dupont", "Jean", "1@gmail.com", null))
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.creerInvestisseur(null, LAST_NAME, EMAIL, PASSWORD)),
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.creerInvestisseur(FIRST_NAME, null, EMAIL, PASSWORD)),
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, null, PASSWORD)),
+            ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EMAIL, null))
         );
     }
 
     @Test 
     void testCreerInvestisseurEmailExistant() {
-        Investisseur.creerInvestisseur("Dupont", "Jean", "existant@gmail.com", "password123");
+        Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EXISTING_EMAIL, PASSWORD);
         
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class, 
-            () -> Investisseur.creerInvestisseur("Martin", "Paul", "existant@gmail.com", "mdp123")
+            () -> Investisseur.creerInvestisseur(NEW_FIRST_NAME, NEW_LAST_NAME, EXISTING_EMAIL, NEW_PASSWORD)
         );
         assertEquals("L'email existe déjà", exception.getMessage());
     }
