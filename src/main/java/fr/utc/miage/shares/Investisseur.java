@@ -15,32 +15,17 @@
  */
 package fr.utc.miage.shares;
 
-public class Investisseur extends Utilisateur {
 import java.util.ArrayList;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
-public class Investisseur {
+public class Investisseur extends Utilisateur {
 
-    private Random random = new Random();
     private String nom;
     private String prenom;
     private final Portfolio portfolio;
-
-    /**
-     * Creates an investor with specified params
-     *
-     * @param nom The investor's name, not null, not empty
-     * @param prenom The investor's first name, not null, not empty
-     * @param email The investor's email, not null, respects a regex
-     * @param password The investor's password, not null, not empty
-     */
-    private String email;
-    private String password;
 
     // for record transactions sale
     private List<Transaction> transactionsSale = new ArrayList<>();
@@ -79,8 +64,16 @@ public class Investisseur {
         return transactionsHistory;
     }
 
-    private Portfolio portfolio;
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
+    
+    /**
+     * Creates an investor with specified params
+     *
+     * @param nom The investor's name, not null, not empty
+     * @param prenom The investor's first name, not null, not empty
+     * @param email The investor's email, not null, respects a regex
+     * @param password The investor's password, not null, not empty
+     */
     public Investisseur(String nom, String prenom, String email, String password) {
         super(email, password);
         if (nom == null || prenom == null) {
@@ -136,36 +129,7 @@ public class Investisseur {
         this.prenom = prenom;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
-    /**
-    *  reset a password of an investisseur and return the new password.
-    * @return the new password
-    * @throws IllegalArgumentException if the email is not set
-    *   */
-    public String resetPassword() {
-        if (this.email == null) {
-            throw new IllegalArgumentException("L'email doit être renseigné pour réinitialiser le mot de passe");
-        }
-            byte[] array = new byte[7];
-
-            random.nextBytes(array);
-            String newPassword = new String(array, StandardCharsets.UTF_8);
-            this.setPassword(newPassword);
-            return newPassword;
-    }
 
 
     @Override
@@ -178,6 +142,8 @@ public class Investisseur {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
     public static Investisseur creerInvestisseur(String nom, String prenom, String email, String password) {
         if (email == null || password == null || nom == null || prenom == null) {
             throw new IllegalArgumentException("Tous les champs doivent être remplis");

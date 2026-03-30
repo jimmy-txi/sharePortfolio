@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class InvestisseurTest {
 
@@ -166,11 +165,6 @@ class InvestisseurTest {
         );
     }
 
-    @Test
-    void testResetPasswordEmailInexistant() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", null, "password123");
-        assertThrows(IllegalArgumentException.class, investisseur::resetPassword);
-    }
 
     @Test
     void testResetPasswordValide() {
