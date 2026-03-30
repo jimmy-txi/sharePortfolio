@@ -15,10 +15,15 @@
  */
 package fr.utc.miage.shares;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
 
 public class Investisseur {
+
+    private Random random = new Random();
     private String nom;
     private String prenom;
     private String email;
@@ -60,6 +65,24 @@ public class Investisseur {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    /**
+    *  reset a password of an investisseur and return the new password.
+    * @return the new password
+    * @throws IllegalArgumentException if the email is not set
+    *   */
+    public String resetPassword() {
+        if (this.email == null) {
+            throw new IllegalArgumentException("L'email doit être renseigné pour réinitialiser le mot de passe");
+        }   
+            byte[] array = new byte[7];
+            
+            random.nextBytes(array);            
+            String newPassword = new String(array, StandardCharsets.UTF_8);
+            this.setPassword(newPassword);
+            return newPassword;
     }
 
 

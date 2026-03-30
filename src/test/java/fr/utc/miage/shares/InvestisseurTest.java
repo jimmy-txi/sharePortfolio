@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 
@@ -132,6 +133,19 @@ class InvestisseurTest {
         assertEquals("L'email existe déjà", exception.getMessage());
     }
 
+    @Test
+    void testResetPasswordEmailInexistant() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", null, "password123");
+        assertThrows(IllegalArgumentException.class, () -> investisseur.resetPassword());
+    }
+
+    @Test 
+    void testResetPasswordValide() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        String newPassword = investisseur.resetPassword();
+        assertNotEquals("password123", newPassword);
+    }
+    
     @Test
     void testDeleteInvestisseurExisting() {
         Investisseur.creerInvestisseur("Dupont", "Jean", "1@gmail.com", "password123");
