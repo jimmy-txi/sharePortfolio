@@ -136,13 +136,13 @@ class InvestisseurTest {
     @Test
     void testResetPasswordEmailInexistant() {
         Investisseur investisseur = new Investisseur("Dupont", "Jean", null, "password123");
-        assertThrows(IllegalArgumentException.class, () -> investisseur.ResetPassword());
+        assertThrows(IllegalArgumentException.class, () -> investisseur.resetPassword());
     }
 
     @Test 
     void testResetPasswordValide() {
         Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
-        String newPassword = investisseur.ResetPassword();
+        String newPassword = investisseur.resetPassword();
         assertNotEquals("password123", newPassword);
     }
     
