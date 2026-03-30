@@ -24,7 +24,22 @@ import java.util.Objects;
  */
 public abstract class Action {
 
-    private final String libelle;
+    // delete final for the possibility of modification of the libelle
+    // [US]: Modification Infos Action #2
+    // [Test]: Modifier le libellé d'une action existante #62
+    private String libelle;
+
+    /**
+     * Set the value of libelle
+     *
+     * @param libelle the value of libelle
+     */
+    public void setLibelle(String libelle) {
+        if (libelle == null || libelle.isBlank()) {
+            throw new IllegalArgumentException("Libelle cannot be null or empty");
+        }
+        this.libelle = libelle;
+    }
 
     /**
      * Get the value of libelle
@@ -40,7 +55,7 @@ public abstract class Action {
      *
      * @param libelle the name of the action object
      */
-    protected Action(final String libelle) {
+    protected Action(String libelle) {
         this.libelle = libelle;
     }
 
