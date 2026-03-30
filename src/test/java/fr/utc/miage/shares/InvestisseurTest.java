@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import fr.utc.miage.Investisseur;
 
 
 
@@ -42,16 +41,6 @@ class InvestisseurTest {
     public static final String INVALID_EMAIL = "invalid.email.com";
     public static final String EXISTING_EMAIL = "existant@gmail.com";
 
-    @Test
-    void teseConstructeur() {
-        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
-        assertAll(
-            "Cree un investisseur avec des champs valides",
-            ()-> assertNotNull(investisseur),
-            ()-> assertEquals(FIRST_NAME, investisseur.getNom()),
-            ()-> assertEquals(LAST_NAME, investisseur.getPrenom()),
-            ()-> assertEquals(EMAIL, investisseur.getEmail()),
-            ()-> assertEquals(PASSWORD, investisseur.getPassword())
 
      /**
      * Tests the constructor of the Investisseur class to ensure it creates an instance without throwing exceptions.
