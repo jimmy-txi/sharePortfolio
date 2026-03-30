@@ -122,4 +122,11 @@ class InvestisseurTest {
         );
         assertEquals("L'email existe déjà", exception.getMessage());
     }
+
+    @Test
+    void testModifyPassword() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        investisseur.setPassword("newPassword456");
+        assertEquals("newPassword456", investisseur.getPassword());
+    }
 }
