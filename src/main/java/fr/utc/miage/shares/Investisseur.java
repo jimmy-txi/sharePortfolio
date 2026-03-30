@@ -15,8 +15,6 @@
  */
 package fr.utc.miage.shares;
 
-import fr.utc.miage.shares.Action;
-
 import java.util.ArrayList;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -34,28 +32,28 @@ public class Investisseur {
     private String password;
 
     // for record transactions sale
-    private List<Action> transactionsSale = new ArrayList<>();
+    private List<Transaction> transactionsSale = new ArrayList<>();
 
     // for record transaction buy
-    private List<Action> transactionsBuy = new ArrayList<>();
+    private List<Transaction> transactionsBuy = new ArrayList<>();
 
     // get transactions sale history
-    public List<Action> getTransactionsSale() {
+    public List<Transaction> getTransactionsSale() {
         return transactionsSale;
     }
 
     // add an Action in transaction sale
-    public void addTransactionSale(Action transaction) {
+    public void addTransactionSale(Transaction transaction) {
         this.transactionsSale.add(transaction);
     }
 
     // get transactions buy history
-    public List<Action> getTransactionsBuy() {
+    public List<Transaction> getTransactionsBuy() {
         return transactionsBuy;
     }
 
     // add an Action in transaction buy
-    public void addTransactionBuy(Action transaction) {
+    public void addTransactionBuy(Transaction transaction) {
         this.transactionsBuy.add(transaction);
     }
 
@@ -63,8 +61,8 @@ public class Investisseur {
     // [US]: Historique Transactions #3
     // [Test]: Consulter l'historique des transactions avec des données existantes #64
     // [Test]: Affichage de l'historique des transactions lorsqu'il est vide #81
-    public Map<String, List<Action>> getTransactionsHistory() {
-        Map<String, List<Action>> transactionsHistory = new HashMap<>();
+    public Map<String, List<Transaction>> getTransactionsHistory() {
+        Map<String, List<Transaction>> transactionsHistory = new HashMap<>();
         transactionsHistory.put("sale", this.transactionsSale);
         transactionsHistory.put("buy", this.transactionsBuy);
         return transactionsHistory;

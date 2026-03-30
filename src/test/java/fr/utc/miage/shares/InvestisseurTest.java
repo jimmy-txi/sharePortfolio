@@ -144,7 +144,7 @@ class InvestisseurTest {
 
     @Test
     void addTransactionSale() {
-        assertDoesNotThrow(()->investisseurTest.addTransactionSale(actionTestForSale1));
+        assertDoesNotThrow(()->investisseurTest.addTransactionSale(new Transaction(actionTestForSale1, new Jour(2026, 1), 10.0f)));
     }
 
     @Test
@@ -154,7 +154,7 @@ class InvestisseurTest {
 
     @Test
     void addTransactionBuy() {
-        assertDoesNotThrow(()->investisseurTest.addTransactionSale(actionTestForBuy1));
+        assertDoesNotThrow(()->investisseurTest.addTransactionBuy(new Transaction(actionTestForBuy1, new Jour(2026, 1), 15.0f)));
     }
 
     // get all transactions history
@@ -162,16 +162,22 @@ class InvestisseurTest {
     // [Test]: Consulter l'historique des transactions avec des données existantes #64
     @Test
     void getTransactionsHistory() {
-        investisseurTest.addTransactionSale(actionTestForSale1);
-        investisseurTest.addTransactionSale(actionTestForSale2);
-        investisseurTest.addTransactionBuy(actionTestForBuy1);
-        investisseurTest.addTransactionBuy(actionTestForBuy2);
+        Transaction tSale1 = new Transaction(actionTestForSale1, new Jour(2026, 1), 10.0f);
+        Transaction tSale2 = new Transaction(actionTestForSale2, new Jour(2026, 2), 12.0f);
+        Transaction tBuy1 = new Transaction(actionTestForBuy1, new Jour(2026, 3), 15.0f);
+        Transaction tBuy2 = new Transaction(actionTestForBuy2, new Jour(2026, 4), 18.0f);
+        
+        investisseurTest.addTransactionSale(tSale1);
+        investisseurTest.addTransactionSale(tSale2);
+        investisseurTest.addTransactionBuy(tBuy1);
+        investisseurTest.addTransactionBuy(tBuy2);
+        
         assertAll(
             "Verifie l'historique des transactions",
-            ()-> assertEquals(actionTestForSale1, investisseurTest.getTransactionsHistory().get("sale").get(0)),
-            ()-> assertEquals(actionTestForSale2, investisseurTest.getTransactionsHistory().get("sale").get(1)),
-            ()-> assertEquals(actionTestForBuy1, investisseurTest.getTransactionsHistory().get("buy").get(0)),
-            ()-> assertEquals(actionTestForBuy2, investisseurTest.getTransactionsHistory().get("buy").get(1))
+            ()-> assertEquals(tSale1, investisseurTest.getTransactionsHistory().get("sale").get(0)),
+            ()-> assertEquals(tSale2, investisseurTest.getTransactionsHistory().get("sale").get(1)),
+            ()-> assertEquals(tBuy1, investisseurTest.getTransactionsHistory().get("buy").get(0)),
+            ()-> assertEquals(tBuy2, investisseurTest.getTransactionsHistory().get("buy").get(1))
         );
     }
 
