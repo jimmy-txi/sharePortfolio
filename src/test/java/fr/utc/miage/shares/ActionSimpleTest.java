@@ -20,8 +20,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActionSimpleTest {
 
@@ -102,4 +100,31 @@ public class ActionSimpleTest {
         );
     }
 
+    @Test
+    void testGetEvolutionCours() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        final Jour jour1 = new Jour(2026, 1);
+        final Jour jour2 = new Jour(2026, 2);
+
+        action.enrgCours(jour1, 1000.0f);
+        action.enrgCours(jour2, 900.0f);
+
+        assertEquals(-10.0f, action.getEvolutionCours(jour1, jour2), 0.01f);
+    }
+
+    @Test
+    void testGetEvolutionCoursWithInvalidDates() {
+        final ActionSimple action = new ActionSimple(FOO_SHARE1);
+        final Jour jour1 = new Jour(2026, 1);
+        final Jour jour2 = new Jour(2026, 2);
+
+        action.enrgCours(jour1, 100.0f);
+
+        assertAll(
+                "getEvolutionCours should throw an exception for invalid dates",
+                () -> assertThrows(IllegalArgumentException.class, () -> action.getEvolutionCours(jour1, new Jour(2026, 3))),
+                () -> assertThrows(IllegalArgumentException.class, () -> action.getEvolutionCours(new Jour(2026, 3), jour2)),
+                () -> assertThrows(IllegalArgumentException.class, () -> action.getEvolutionCours(new Jour(2026, 3), new Jour(2026, 4)))
+        );
+    }
 }
