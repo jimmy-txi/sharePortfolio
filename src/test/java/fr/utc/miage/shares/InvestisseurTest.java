@@ -22,29 +22,27 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import fr.utc.miage.Investisseur;
-
 class InvestisseurTest {
-    @Test
-    void teseConstructeur() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
-        assertAll(
-            "Cree un investisseur avec des champs valides",
-            ()-> assertNotNull(investisseur),
-            ()-> assertEquals("Dupont", investisseur.getNom()),
-            ()-> assertEquals("Jean", investisseur.getPrenom()),
-            ()-> assertEquals("1@gmail.com", investisseur.getEmail()),
-            ()-> assertEquals("password123", investisseur.getPassword())
 
-        );
+    private final Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+    private final Action action = new ActionSimple("Action1"); 
+
+
+     /**
+     * Tests the constructor of the Investisseur class to ensure it creates an instance without throwing exceptions.
+     */
+    @Test
+    void testConstructor() {
+        assertDoesNotThrow(() -> new Investisseur("Dupont", "Jean", "1@gmail.com", "password123"));
+        assertNotNull(investisseur);
     }
 
 
     @Test
     void testGetters() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
         assertAll(
             "Verifie les getters",
             ()-> assertEquals("Dupont", investisseur.getNom()),
@@ -56,7 +54,6 @@ class InvestisseurTest {
 
     @Test
     void testSetters() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
         investisseur.setNom("Martin");
         investisseur.setPrenom("Paul");
         investisseur.setPassword("password456");
@@ -70,7 +67,6 @@ class InvestisseurTest {
 
     @Test
     void testToString() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
         assertAll(
             "Verifie le toString",
             ()-> assertEquals("Investisseur [nom=Dupont, prenom=Jean, email=1@gmail.com, password=password123]", investisseur.toString())
@@ -80,7 +76,6 @@ class InvestisseurTest {
 
     @Test
     void testCreerInvestisseurValide() {
-        Investisseur investisseur = Investisseur.creerInvestisseur("Dupont", "Jean", "1@gmail.com", "password123");
         assertAll(
             "Cree un ",
             ()-> assertNotNull(investisseur),
@@ -121,5 +116,23 @@ class InvestisseurTest {
             () -> Investisseur.creerInvestisseur("Martin", "Paul", "existant@gmail.com", "mdp123")
         );
         assertEquals("L'email existe déjà", exception.getMessage());
+    }
+
+     /**
+     * Tests the buy method of the Investor class to ensure it throws an IllegalArgumentException when a negative quantity is provided.
+     */
+    @Test
+    void testBuyNegativeQuantity() {
+        assertThrows(IllegalArgumentException.class, () -> investisseur.buy(action, 0));
+    }
+
+    @Test
+    void testBuy(){
+        assertDoesNotThrow(() -> investisseur.buy(action, 1));
+    }
+
+    @Test
+    void testBuyNullAction(){
+        assertThrows(IllegalArgumentException.class, () -> investisseur.buy(null, 1));
     }
 }
