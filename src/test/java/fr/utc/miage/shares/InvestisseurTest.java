@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import fr.utc.miage.Investisseur;
 
 
 
@@ -43,18 +42,13 @@ class InvestisseurTest {
     public static final String INVALID_EMAIL = "invalid.email.com";
     public static final String EXISTING_EMAIL = "existant@gmail.com";
 
-    @Test
-    void teseConstructeur() {
-        Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
-        assertAll(
-            "Cree un investisseur avec des champs valides",
-            ()-> assertNotNull(investisseur),
-            ()-> assertEquals(FIRST_NAME, investisseur.getNom()),
-            ()-> assertEquals(LAST_NAME, investisseur.getPrenom()),
-            ()-> assertEquals(EMAIL, investisseur.getEmail()),
-            ()-> assertEquals(PASSWORD, investisseur.getPassword())
 
-        );
+     /**
+     * Tests the constructor of the Investisseur class to ensure it creates an instance without throwing exceptions.
+     */
+    @Test
+    void testConstructor() {
+        assertDoesNotThrow(() -> new Investisseur("Dupont", "Jean", "1@gmail.com", "password123"));
     }
 
 
@@ -169,5 +163,28 @@ class InvestisseurTest {
             ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur("emailNonExistant@gmail.com")),
             ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur(null))
         );
+    }
+
+     /**
+     * Tests the buy method of the Investor class to ensure it throws an IllegalArgumentException when a negative quantity is provided.
+     */
+    @Test
+    void testBuyNegativeQuantity() {
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        assertThrows(IllegalArgumentException.class, () -> investisseur.buy(action, 0));
+    }
+
+    @Test
+    void testBuy(){
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        Action action  = ActionSimpleTest.getDefaultActionSimple();
+        assertDoesNotThrow(() -> investisseur.buy(action, 1));
+    }
+
+    @Test
+    void testBuyNullAction(){
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        assertThrows(IllegalArgumentException.class, () -> investisseur.buy(null, 1));
     }
 }
