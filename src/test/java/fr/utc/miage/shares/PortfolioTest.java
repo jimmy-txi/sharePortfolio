@@ -15,9 +15,13 @@
  */
 package fr.utc.miage.shares;
 
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -61,6 +65,35 @@ class PortfolioTest {
         assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(null, 1));
     }
 
+    @Test
+    void testRemoveActionQuantity() {
+        Portfolio portfolio = new Portfolio();
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        portfolio.addActionQuantity(action, 2);
+        portfolio.removeActionQuantity(action, 1);
+        assertEquals(1, portfolio.getActionQuantity(action));
+    }
+
+    @Test
+    void testRemoveActionQuantityNegativeQuantity() {
+        Portfolio portfolio = new Portfolio();
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        assertThrows(IllegalArgumentException.class, () -> portfolio.removeActionQuantity(action, 0));
+    }
+
+    @Test 
+    void testRemoveActionQuantityNullAction() {
+        Portfolio portfolio = new Portfolio();
+        assertThrows(IllegalArgumentException.class, () -> portfolio.removeActionQuantity(null, 1));
+    }
+
+    @Test
+    void testRemoveActionQuantityNotEnough() {
+        Portfolio portfolio = new Portfolio();
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        portfolio.addActionQuantity(action, 1);
+        assertThrows(IllegalArgumentException.class, () -> portfolio.removeActionQuantity(action, 2));
+    }
     /**
      * Tests the getActions method of the Portfolio class to ensure it returns a correct map of all actions in the portfolio with their quantities.
      */

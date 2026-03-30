@@ -60,6 +60,28 @@ public class Portfolio {
     }
 
     /**
+     * Removes a specified quantity of an action from the portfolio.
+     * @param a the action to remove (must not be null)
+     * @param quantity the quantity to remove (must be positive and less than or equal to the quantity owned)
+     */
+    public void removeActionQuantity(Action a, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if (a == null) {
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        int currentQuantity = this.actions.getOrDefault(a, 0);
+        if (currentQuantity < quantity) {
+            throw new IllegalArgumentException("Not enough quantity to remove");
+        }
+        if (currentQuantity == quantity) {
+            this.actions.remove(a);
+        } else {
+            this.actions.put(a, currentQuantity - quantity);
+        }
+    }
+    /**
      * Return all actions in the portfolio.
      * @return a map of all actions in the portfolio with their quantities
      */
