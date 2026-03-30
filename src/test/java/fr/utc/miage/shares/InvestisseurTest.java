@@ -85,6 +85,85 @@ class InvestisseurTest {
     }
 
     @Test
+    void testCreerInvestisseurEmailExistant() {
+        Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EXISTING_EMAIL, PASSWORD);
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> Investisseur.creerInvestisseur(NEW_FIRST_NAME, NEW_LAST_NAME, EXISTING_EMAIL, NEW_PASSWORD)
+        );
+        assertEquals("L'email existe déjà", exception.getMessage());
+    }
+
+    private final Investisseur investisseurTest = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+    private final Action actionTestForSale1 = new ActionSimple("ActionTestForSale1");
+    private final Action actionTestForSale2 = new ActionSimple("ActionTestForSale2");
+    private final Action actionTestForBuy1 = new ActionSimple("ActionTestForBuy1");
+    private final Action actionTestForBuy2 = new ActionSimple("ActionTestForBuy2");
+
+    @Test
+    void getTransactionsSale() {
+        assertDoesNotThrow(investisseurTest::getTransactionsSale);
+    }
+
+    @Test
+    void addTransactionSale() {
+        assertDoesNotThrow(()->investisseurTest.addTransactionSale(new Transaction(actionTestForSale1, new Jour(2026, 1), 10.0f)));
+    }
+
+    @Test
+    void getTransactionsBuy() {
+        assertDoesNotThrow(investisseurTest::getTransactionsBuy);
+    }
+
+    @Test
+    void addTransactionBuy() {
+        assertDoesNotThrow(()->investisseurTest.addTransactionBuy(new Transaction(actionTestForBuy1, new Jour(2026, 1), 15.0f)));
+    }
+
+    // get all transactions history
+    // [US]: Historique Transactions #3
+    // [Test]: Consulter l'historique des transactions avec des données existantes #64
+    @Test
+    void getTransactionsHistory() {
+        Transaction tSale1 = new Transaction(actionTestForSale1, new Jour(2026, 1), 10.0f);
+        Transaction tSale2 = new Transaction(actionTestForSale2, new Jour(2026, 2), 12.0f);
+        Transaction tBuy1 = new Transaction(actionTestForBuy1, new Jour(2026, 3), 15.0f);
+        Transaction tBuy2 = new Transaction(actionTestForBuy2, new Jour(2026, 4), 18.0f);
+
+        investisseurTest.addTransactionSale(tSale1);
+        investisseurTest.addTransactionSale(tSale2);
+        investisseurTest.addTransactionBuy(tBuy1);
+        investisseurTest.addTransactionBuy(tBuy2);
+
+        assertAll(
+            "Verifie l'historique des transactions",
+            ()-> assertEquals(tSale1, investisseurTest.getTransactionsHistory().get("sale").get(0)),
+            ()-> assertEquals(tSale2, investisseurTest.getTransactionsHistory().get("sale").get(1)),
+            ()-> assertEquals(tBuy1, investisseurTest.getTransactionsHistory().get("buy").get(0)),
+            ()-> assertEquals(tBuy2, investisseurTest.getTransactionsHistory().get("buy").get(1))
+        );
+    }
+
+    // [Test]: Affichage de l'historique des transactions lorsqu'il est vide #81
+    @Test
+    void getTransactionsHistoryEmpty() {
+        assertAll(
+            "Verifie l'historique des transactions",
+            ()-> assertEquals(0, investisseurTest.getTransactionsHistory().get("sale").size()),
+            ()-> assertEquals(0, investisseurTest.getTransactionsHistory().get("buy").size())
+        );
+    }
+
+
+    @Test
+    void testResetPasswordValide() {
+        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        String newPassword = investisseur.resetPassword();
+        assertNotEquals("password123", newPassword);
+    }
+
+    @Test
     void testSettersWithIncorrectValueThrows() {
         Investisseur investisseur = new Investisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
         assertAll(
@@ -185,17 +264,6 @@ class InvestisseurTest {
         assertDoesNotThrow(investisseur::hashCode, "hashCode should not throw");
     }
 
-    @Test 
-    void testCreerInvestisseurEmailExistant() {
-        Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EXISTING_EMAIL, PASSWORD);
-        
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class, 
-            () -> Investisseur.creerInvestisseur(NEW_FIRST_NAME, NEW_LAST_NAME, EXISTING_EMAIL, NEW_PASSWORD)
-        );
-        assertEquals("L'email existe déjà", exception.getMessage());
-    }
-
     @Test
     void testDeleteInvestisseurExisting() {
         Investisseur.creerInvestisseur(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD);
@@ -212,5 +280,42 @@ class InvestisseurTest {
             ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur("emailNonExistant@gmail.com")),
             ()-> assertThrows(IllegalArgumentException.class, () -> Investisseur.deleteInvestisseur(null))
         );
+    }
+
+    @Test
+    void testSellActionWithNegativeQuantityThrows() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        assertThrows(IllegalArgumentException.class, () -> investisseur.sell(action, -10));
+    }
+
+    @Test
+    void testSellNullActionThrows() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        assertThrows(IllegalArgumentException.class, () -> investisseur.sell(null, 10));
+    }
+
+    @Test
+    void testSellActionWithValidQuantityDoesNotThrow() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        investisseur.buy(action, 10);
+        assertDoesNotThrow(() -> investisseur.sell(action, 5));
+    }
+
+    @Test
+    void testSellActionWithQuantityGreaterThanOwnedThrows() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        investisseur.buy(action, 10);
+        assertThrows(IllegalArgumentException.class, () -> investisseur.sell(action, 15));
+    }
+
+    @Test
+    void testSellActionWithQuantityEqualToOwnedDoesNotThrow() {
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        investisseur.buy(action, 10);
+        assertDoesNotThrow(() -> investisseur.sell(action, 10));
     }
 }

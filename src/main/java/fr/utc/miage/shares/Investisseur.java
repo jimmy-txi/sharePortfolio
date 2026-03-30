@@ -15,17 +15,77 @@
  */
 package fr.utc.miage.shares;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Investisseur extends Utilisateur {
+
     private String nom;
     private String prenom;
     private final Portfolio portfolio;
     private static Map<String, Investisseur> investisseursMap = new HashMap<>();
 
+    // for record transactions sale
+    private List<Transaction> transactionsSale = new ArrayList<>();
+
+    // for record transaction buy
+    private List<Transaction> transactionsBuy = new ArrayList<>();
+
     /**
-     * Creates an investor with specified params
+     * Gets the sale transactions history.
+     *
+     * @return the list of sale transactions
+     */
+    public List<Transaction> getTransactionsSale() {
+        return transactionsSale;
+    }
+
+    /**
+     * Adds a sale transaction to the history.
+     *
+     * @param transaction the transaction to add
+     */
+    public void addTransactionSale(Transaction transaction) {
+        this.transactionsSale.add(transaction);
+    }
+
+    /**
+     * Gets the buy transactions history.
+     *
+     * @return the list of buy transactions
+     */
+    public List<Transaction> getTransactionsBuy() {
+        return transactionsBuy;
+    }
+
+    /**
+     * Adds a buy transaction to the history.
+     *
+     * @param transaction the transaction to add
+     */
+    public void addTransactionBuy(Transaction transaction) {
+        this.transactionsBuy.add(transaction);
+    }
+
+    /**
+     * Gets all transactions history grouped by type.
+     * [US]: Historique Transactions #3
+     * [Test]: Consulter l'historique des transactions avec des données existantes #64
+     * [Test]: Affichage de l'historique des transactions lorsqu'il est vide #81
+     *
+     * @return a map with "sale" and "buy" keys containing respective transaction lists
+     */
+    public Map<String, List<Transaction>> getTransactionsHistory() {
+        Map<String, List<Transaction>> transactionsHistory = new HashMap<>();
+        transactionsHistory.put("sale", this.transactionsSale);
+        transactionsHistory.put("buy", this.transactionsBuy);
+        return transactionsHistory;
+    }
+
+    /**
+     * Creates an investor with specified params.
      *
      * @param nom The investor's name, not null, not empty
      * @param prenom The investor's first name, not null, not empty
@@ -46,7 +106,7 @@ public class Investisseur extends Utilisateur {
     }
 
     /**
-     * Gets the name of the investor
+     * Gets the name of the investor.
      *
      * @return the name of the investor
      */
@@ -55,7 +115,7 @@ public class Investisseur extends Utilisateur {
     }
 
     /**
-     * Sets the name of the investor
+     * Sets the name of the investor.
      *
      * @param nom the name of the investor, not null
      */
@@ -67,7 +127,7 @@ public class Investisseur extends Utilisateur {
     }
 
     /**
-     * Gets the first name of the investor
+     * Gets the first name of the investor.
      *
      * @return the first name of the investor
      */
@@ -76,7 +136,7 @@ public class Investisseur extends Utilisateur {
     }
 
     /**
-     * Sets the first name of the investor
+     * Sets the first name of the investor.
      *
      * @param prenom the first name of the investor, not null
      */
@@ -105,11 +165,24 @@ public class Investisseur extends Utilisateur {
         return super.equals(o);
     }
 
-    public static void clearInvestisseursMap() {
-        investisseursMap.clear();
-    }
-
+    /**
+     * Creates and registers a new investor.
+     * [US-30]: Connexion Compte
+     *
+     * @param nom the investor's name, not null, not empty
+     * @param prenom the investor's first name, not null, not empty
+     * @param email the investor's email, not null, valid format
+     * @param password the investor's password, not null, not empty
+     * @return the newly created investor
+     * @throws IllegalArgumentException if any field is null, email is invalid, or email already exists
+     */
     public static Investisseur creerInvestisseur(String nom, String prenom, String email, String password) {
+        if (email == null || password == null || nom == null || prenom == null) {
+            throw new IllegalArgumentException("Tous les champs doivent être remplis");
+        }
+        if (!email.contains("@")) {
+            throw new IllegalArgumentException("L'email n'est pas valide");
+        }
         if (investisseursMap.containsKey(email)) {
             throw new IllegalArgumentException("L'email existe déjà");
         }
@@ -119,7 +192,15 @@ public class Investisseur extends Utilisateur {
     }
 
     /**
+     * Clears the investors registry. Used for test isolation.
+     */
+    public static void clearInvestisseursMap() {
+        investisseursMap.clear();
+    }
+
+    /**
      * [US-30]: Authentifie un investisseur with his email and password.
+     *
      * @param email the investor's email
      * @param password the password
      * @return the investor if credentials are valid
@@ -136,6 +217,12 @@ public class Investisseur extends Utilisateur {
         return investisseur;
     }
 
+    /**
+     * Deletes an investor from the registry.
+     *
+     * @param email the investor's email, not null
+     * @throws IllegalArgumentException if email is null or not found
+     */
     public static void deleteInvestisseur(String email) {
         if (email == null) {
             throw new IllegalArgumentException("L'email ne peut pas être null");
@@ -147,18 +234,37 @@ public class Investisseur extends Utilisateur {
     }
 
     /**
-    *  Buys a specified quantity of a given action and updates the portfolio accordingly.
-    *
-    * @param a the action to buy (must not be null)
-    * @param quantity the quantity to buy (must be positive)
-    */
-    public void buy(Action a, int quantity){
-        if(quantity <= 0){
+     * Buys a specified quantity of a given action and updates the portfolio accordingly.
+     *
+     * @param a the action to buy (must not be null)
+     * @param quantity the quantity to buy (must be positive)
+     */
+    public void buy(Action a, int quantity) {
+        if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
-        if(a == null){
+        if (a == null) {
             throw new IllegalArgumentException("Action cannot be null");
         }
         this.portfolio.addActionQuantity(a, quantity);
+    }
+
+    /**
+     * Sells a specified quantity of a given action and updates the portfolio accordingly.
+     *
+     * @param a the action to sell (must not be null)
+     * @param quantity the quantity to sell (must be positive and less than or equal to the quantity owned)
+     */
+    public void sell(Action a, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if (a == null) {
+            throw new IllegalArgumentException("Action cannot be null");
+        }
+        if (this.portfolio.getActionQuantity(a) < quantity) {
+            throw new IllegalArgumentException("Not enough quantity to sell");
+        }
+        this.portfolio.removeActionQuantity(a, quantity);
     }
 }
