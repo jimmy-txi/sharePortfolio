@@ -19,24 +19,22 @@ public class ActionComposeeTest {
 
     @Test
     void testCreationActionComposee() {
-        // 1. Appel manuel de l'initialisation
         setUp();
         
-        // 2. Sous-problème 1 : Vérifier que l'action composée est bien créée avec son libellé
+        //Sous-problème 1 : Vérifier que l'action composée est bien créée avec son libellé
         assertEquals("Banque Innovation", bqInno.getLibelle(), "Le libellé doit correspondre à celui passé au constructeur");
         assertTrue(bqInno.getMapPanier().isEmpty(), "Le panier doit être vide à la création");
     }
 
     @Test
     void testEnrgComposition_AjoutActionSimple() {
-        // 1. Appel manuel de l'initialisation
         setUp();
         
-        // 2. Sous-problème 2 : L'administrateur ajoute des actions simples dans l'action composée
+        //Sous-problème 2 : L'administrateur ajoute des actions simples dans l'action composée
         bqInno.enrgComposition(axa, 0.4f); // 40% d'AXA
         bqInno.enrgComposition(bnp, 0.6f); // 60% de BNP
 
-        // 3. Vérifications
+        //Vérifications
         assertEquals(2, bqInno.getMapPanier().size(), "L'action composée devrait contenir 2 actions");
         assertTrue(bqInno.getMapPanier().containsKey(axa), "Le panier doit contenir l'action AXA");
         assertEquals(0.4f, bqInno.getMapPanier().get(axa), "La proportion d'AXA doit être de 40%");
@@ -44,7 +42,6 @@ public class ActionComposeeTest {
     
     @Test
     void testEnrgComposition_MiseAJourProportion() {
-        // 1. Appel manuel de l'initialisation
         setUp();
         
         // 2. Sous-problème 3 : Modifier la proportion d'une action existante dans le panier
@@ -54,5 +51,30 @@ public class ActionComposeeTest {
         // 3. Vérifications
         assertEquals(1, bqInno.getMapPanier().size(), "Il ne doit toujours y avoir qu'une seule action");
         assertEquals(0.5f, bqInno.getMapPanier().get(axa), "La proportion doit avoir été mise à jour à 50%");
+    }
+
+    @Test
+    void testValeur() {
+        setUp();
+        
+        // 2. Création d'un jour de test
+        // (Adaptez les paramètres du constructeur selon votre classe Jour, ex: new Jour(2026, 3, 30))
+        Jour jourTest = new Jour(2026,1); 
+        
+        // 3. Définition du cours des actions simples pour ce jour précis
+        // (Adaptez le nom de la méthode 'enrgCours' si elle s'appelle autrement dans votre ActionSimple)
+        axa.enrgCours(jourTest, 100.0f); // L'action AXA vaut 100€ ce jour-là
+        bnp.enrgCours(jourTest, 50.0f);  // L'action BNP vaut 50€ ce jour-là
+        
+        // 4. Définition de la composition de notre panier "Banque Innovation"
+        bqInno.enrgComposition(axa, 0.4f); // 40% d'AXA
+        bqInno.enrgComposition(bnp, 0.6f); // 60% de BNP
+        
+        // 5. Calcul attendu (sur papier) :
+        // (100€ * 0.4) + (50€ * 0.6) = 40€ + 30€ = 70€
+        float valeurAttendue = 70.0f;
+        
+        // 6. Assertion : On vérifie que la méthode valeur(jourTest) renvoie bien 70.0f
+        assertEquals(valeurAttendue, bqInno.valeur(jourTest), "La valeur de l'action composée doit être la somme pondérée du cours de ses composants");
     }
 }
