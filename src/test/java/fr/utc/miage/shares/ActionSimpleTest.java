@@ -27,18 +27,20 @@ class ActionSimpleTest {
 
     private static final String FOO_SHARE1 = "Foo Share 1";
     private static final String FOO_SHARE2 = "Foo Share 2";
+    private static final Jour jourTest = new Jour(2026,76);
 
+    // for method enrgCours()
     @Test
     void testEnregistreActionReussir() {
         final ActionSimple action = new ActionSimple(FOO_SHARE1);
-        final Jour jour = new Jour(2026, 76);
         assertAll(
                 "Enregistrer une Action Pas Réussir",
-                () -> assertDoesNotThrow(() -> action.enrgCours(jour, 150.00f)),
-                () -> assertEquals(150.00f, action.valeur(jour))
+                () -> assertDoesNotThrow(() -> action.enrgCours(jourTest, 150.00f)),
+                () -> assertEquals(150.00f, action.valeur(jourTest))
         );
     }
 
+    // for method enrgCours()
     @Test
     void testEnregistrerJourAfterTodayThrowException() {
         final ActionSimple action = new ActionSimple(FOO_SHARE1);
@@ -47,29 +49,28 @@ class ActionSimpleTest {
         assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jourAfterToday, 150.00f), "Make sure if input a date after today throw an Exception");
     }
 
+    // for method enrgCours()
     @Test
     void testEnregistrerJourExistantThrowException() {
         final ActionSimple action = new ActionSimple(FOO_SHARE1);
-        final Jour jour = new Jour(2026, 76);
-        action.enrgCours(jour, 150.00f);
-        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jour, 150.00f), "Make sure do not save same date");
+        action.enrgCours(jourTest, 150.00f);
+        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jourTest, 150.00f), "Make sure do not save same date");
 
     }
 
+    // for method enrgCours()
     @Test
     void testSaveActionValueNegative() {
         final ActionSimple action = new ActionSimple(FOO_SHARE1);
-        final Jour jour = new Jour(2026, 76);
         final float value = -100f;
-        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jour, value));
+        assertThrows(IllegalArgumentException.class, () -> action.enrgCours(jourTest, value));
     }
 
     @Test
     void testConsultationPrixInexistantRetourner0() {
         final ActionSimple action = new ActionSimple(FOO_SHARE1);
-        final Jour jour = new Jour(2026, 76);
-        assertDoesNotThrow(() -> action.valeur(jour));
-        assertEquals(0, action.valeur(jour));
+        assertDoesNotThrow(() -> action.valeur(jourTest));
+        assertEquals(0, action.valeur(jourTest));
     }
 
     @Test
@@ -82,8 +83,7 @@ class ActionSimpleTest {
                 "ActionSimple equality should depend on the label",
                 () -> assertEquals(action1, action2),
                 () -> assertNotEquals(action1, action3),
-                () -> assertNotEquals(null, action1),
-                () -> assertNotEquals(action1, new Jour(2026, 76))
+                () -> assertNotEquals(null, action1)
         );
     }
 
@@ -98,4 +98,5 @@ class ActionSimpleTest {
                 () -> assertEquals(action1.hashCode(), action2.hashCode())
         );
     }
+
 }

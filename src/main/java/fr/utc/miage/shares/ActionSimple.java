@@ -46,13 +46,13 @@ public class ActionSimple extends Action {
         if (mapCours.containsKey(j)) {
             throw new IllegalArgumentException("Date Already Exist");
         }
-        if (!this.mapCours.containsKey(j)) {
-            if (v > 0){
-                this.mapCours.put(j, v);
-            } else {
-                throw new IllegalArgumentException("Value out of range");
-            }
+
+        if (v > 0){
+            this.mapCours.put(j, v);
+        } else {
+            throw new IllegalArgumentException("Value out of range");
         }
+
     }
 
     @Override
