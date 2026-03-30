@@ -40,7 +40,7 @@ class PortfolioTest {
     @Test
     void testAddActionQuantity() {
         Portfolio portfolio = new Portfolio();
-        Action action = new ActionSimple("Action1");
+        Action action = ActionSimpleTest.getDefaultActionSimple();
         portfolio.addActionQuantity(action, 1);
         assertEquals(1, portfolio.getActionQuantity(action));
     }
@@ -51,7 +51,7 @@ class PortfolioTest {
     @Test
     void testAddActionQuantityNegativeQuantity(){
         Portfolio portfolio = new Portfolio();
-        Action action = new ActionSimple("Action1");
+        Action action = ActionSimpleTest.getDefaultActionSimple();
         assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(action, 0));
     }
 
