@@ -39,30 +39,30 @@ class InvestisseurTest {
     public static final String EXISTING_EMAIL = "existant@gmail.com";
 
     public static Investisseur getDefaultInvestisseur() {
-        return new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        return new Investisseur("Dupont", FIRST_NAME, EMAIL, PASSWORD);
     }
 
 
     @Test
     void teseConstructeur() {
-        Investisseur investisseur = new Investisseur("Dupont", "Jean", "1@gmail.com", "password123");
+        Investisseur investisseur = new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD);
         assertAll(
                 "Cree un investisseur avec des champs valides",
                 ()-> assertNotNull(investisseur),
-                ()-> assertEquals("Dupont", investisseur.getNom()),
-                ()-> assertEquals("Jean", investisseur.getPrenom()),
-                ()-> assertEquals("1@gmail.com", investisseur.getEmail())
+                ()-> assertEquals(LAST_NAME, investisseur.getNom()),
+                ()-> assertEquals(FIRST_NAME, investisseur.getPrenom()),
+                ()-> assertEquals(EMAIL, investisseur.getEmail())
         );
     }
 
     @Test
     void teseConstructeurThrowsWithIncorrectValues() {
         assertAll(
-                "Cree un investisseur avec des champs valides",
-                () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur(null, "Jean", "1@gmail.com", "password123")),
-                () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur("", "Jean", "1@gmail.com", "password123")),
-                () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur("Dupont", null, "1@gmail.com", "password123")),
-                () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur("Dupont", "", "1@gmail.com", "password123"))
+                "Cree un investisseur avec des champs invalides",
+                () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur(null, FIRST_NAME, EMAIL, PASSWORD)),
+                () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur("", FIRST_NAME, EMAIL, PASSWORD)),
+                () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur(LAST_NAME, null, EMAIL, PASSWORD)),
+                () -> assertThrows(IllegalArgumentException.class, () -> new Investisseur(LAST_NAME, "", EMAIL, PASSWORD))
         );
     }
 
@@ -72,7 +72,7 @@ class InvestisseurTest {
      */
     @Test
     void testConstructor() {
-        assertDoesNotThrow(() -> new Investisseur("Dupont", "Jean", "1@gmail.com", "password123"));
+        assertDoesNotThrow(() -> new Investisseur(LAST_NAME, FIRST_NAME, EMAIL, PASSWORD));
     }
 
 
