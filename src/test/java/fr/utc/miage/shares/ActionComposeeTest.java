@@ -16,17 +16,18 @@
 package fr.utc.miage.shares;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
-public class ActionComposeeTest {
+class ActionComposeeTest {
 
     private ActionComposee bqInno;
     private ActionSimple axa;
     private ActionSimple bnp;
 
     
-    void setUp() {
+    void initial() {
         bqInno = new ActionComposee("Banque Innovation");
         axa = new ActionSimple("AXA");
         bnp = new ActionSimple("BNP Paribas");
@@ -34,7 +35,7 @@ public class ActionComposeeTest {
 
     @Test
     void testCreationActionComposee() {
-        setUp();
+        initial();
         
         //Sous-problème 1 : Vérifier que l'action composée est bien créée avec son libellé
         assertEquals("Banque Innovation", bqInno.getLibelle(), "Le libellé doit correspondre à celui passé au constructeur");
@@ -43,7 +44,7 @@ public class ActionComposeeTest {
 
     @Test
     void testEnrgComposition_AjoutActionSimple() {
-        setUp();
+        initial();
         
         //Sous-problème 2 : L'administrateur ajoute des actions simples dans l'action composée
         bqInno.enrgComposition(axa, 0.4f); // 40% d'AXA
@@ -57,7 +58,7 @@ public class ActionComposeeTest {
     
     @Test
     void testEnrgComposition_MiseAJourProportion() {
-        setUp();
+        initial();
         
         // 2. Sous-problème 3 : Modifier la proportion d'une action existante dans le panier
         bqInno.enrgComposition(axa, 0.4f);
@@ -70,7 +71,7 @@ public class ActionComposeeTest {
 
     @Test
     void testValeur() {
-        setUp();
+        initial();
         
         // 2. Création d'un jour de test
         // (Adaptez les paramètres du constructeur selon votre classe Jour, ex: new Jour(2026, 3, 30))
@@ -91,5 +92,20 @@ public class ActionComposeeTest {
         
         // 6. Assertion : On vérifie que la méthode valeur(jourTest) renvoie bien 70.0f
         assertEquals(valeurAttendue, bqInno.valeur(jourTest), "La valeur de l'action composée doit être la somme pondérée du cours de ses composants");
+    }
+
+    @Test
+    void testEqualsComplet() {
+        ActionComposee action1 = new ActionComposee("Panier A");
+        ActionComposee action2 = new ActionComposee("Panier A");
+        ActionComposee action3 = new ActionComposee("Panier B");
+        
+        // --- TRUE ---
+        assertTrue(action1.equals(action1)); 
+        assertTrue(action1.equals(action2));
+        // --- FALSE ---
+        assertFalse(action1.equals(action3)); 
+        assertFalse(action1.equals(null));   
+        assertFalse(action1.equals(new Object())); 
     }
 }

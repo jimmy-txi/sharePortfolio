@@ -17,6 +17,7 @@ package fr.utc.miage.shares;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Représente une action composée, c'est-à-dire un panier d'actions.
@@ -65,4 +66,20 @@ public class ActionComposee extends Action {
         
         return valeurTotale;
     }
+
+
+    @Override
+public boolean equals(Object obj) {
+    if (this == obj) {
+        return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+        return false;
+    }
+    final Action other = (Action) obj;
+    
+    // On utilise getLibelle() au lieu de libelle en direct
+    return Objects.equals(this.getLibelle(), other.getLibelle());
+}
+
 }
