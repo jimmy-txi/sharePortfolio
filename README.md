@@ -32,3 +32,9 @@ limitations under the License.
 ## Documents pertinents (Relevant Documents)
 
 - [pom.xml](./pom.xml)
+
+## Règles de codes
+
+- En anglais
+- Règles standards de Java
+- Faire la javadoc
