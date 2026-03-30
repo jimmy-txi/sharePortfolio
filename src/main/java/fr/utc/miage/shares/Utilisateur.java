@@ -15,13 +15,13 @@
  */
 package fr.utc.miage.shares;
 
+import java.security.SecureRandom;
 import java.util.Objects;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 
 public abstract class Utilisateur {
-    private final Random random = new Random();
+    private final SecureRandom random = new SecureRandom();
     private final String email;
     private String password;
 
