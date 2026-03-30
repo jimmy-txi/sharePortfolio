@@ -15,11 +15,57 @@
  */
 package fr.utc.miage.shares;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 public class Investisseur extends Utilisateur {
+
     private String nom;
     private String prenom;
     private final Portfolio portfolio;
 
+    // for record transactions sale
+    private List<Transaction> transactionsSale = new ArrayList<>();
+
+    // for record transaction buy
+    private List<Transaction> transactionsBuy = new ArrayList<>();
+
+    // get transactions sale history
+    public List<Transaction> getTransactionsSale() {
+        return transactionsSale;
+    }
+
+    // add an Action in transaction sale
+    public void addTransactionSale(Transaction transaction) {
+        this.transactionsSale.add(transaction);
+    }
+
+    // get transactions buy history
+    public List<Transaction> getTransactionsBuy() {
+        return transactionsBuy;
+    }
+
+    // add an Action in transaction buy
+    public void addTransactionBuy(Transaction transaction) {
+        this.transactionsBuy.add(transaction);
+    }
+
+    // get all transactions history
+    // [US]: Historique Transactions #3
+    // [Test]: Consulter l'historique des transactions avec des données existantes #64
+    // [Test]: Affichage de l'historique des transactions lorsqu'il est vide #81
+    public Map<String, List<Transaction>> getTransactionsHistory() {
+        Map<String, List<Transaction>> transactionsHistory = new HashMap<>();
+        transactionsHistory.put("sale", this.transactionsSale);
+        transactionsHistory.put("buy", this.transactionsBuy);
+        return transactionsHistory;
+    }
+
+    private static Map<String, Investisseur> investisseursMap = new HashMap<>();
+    
     /**
      * Creates an investor with specified params
      *
@@ -83,6 +129,9 @@ public class Investisseur extends Utilisateur {
         this.prenom = prenom;
     }
 
+
+
+
     @Override
     public String toString() {
         return "Investisseur [nom=" + nom + ", prenom=" + prenom + ", email=" + getEmail()
@@ -93,6 +142,21 @@ public class Investisseur extends Utilisateur {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    public static Investisseur creerInvestisseur(String nom, String prenom, String email, String password) {
+        if (email == null || password == null || nom == null || prenom == null) {
+            throw new IllegalArgumentException("Tous les champs doivent être remplis");
+        }
+        if (!email.contains("@")) {
+            throw new IllegalArgumentException("L'email n'est pas valide");
+        }
+        if (investisseursMap.containsKey(email)) {
+            throw new IllegalArgumentException("L'email existe déjà");
+        }
+        Investisseur nouvelInvestisseur = new Investisseur(nom, prenom, email, password);
+        investisseursMap.put(email, nouvelInvestisseur);
+        return nouvelInvestisseur;
     }
 
     // for SonarQube

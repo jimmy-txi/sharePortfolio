@@ -76,4 +76,11 @@ public class Portfolio {
             this.actions.put(a, currentQuantity - quantity);
         }
     }
+    /**
+     * Return all actions in the portfolio.
+     * @return a map of all actions in the portfolio with their quantities
+     */
+    public Map<Action, Integer> getActions() {
+        return new HashMap<>(this.actions);
+    }
 }
