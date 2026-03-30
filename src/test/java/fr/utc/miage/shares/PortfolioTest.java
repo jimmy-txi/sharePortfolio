@@ -19,10 +19,9 @@ package fr.utc.miage.shares;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.HashMap;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Map;
-
+import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 
 class PortfolioTest {
@@ -65,6 +64,30 @@ class PortfolioTest {
         assertThrows(IllegalArgumentException.class, () -> portfolio.addActionQuantity(null, 1));
     }
 
+    /**
+     * Test  afficher les détails d'une action présente dans le portefeuille
+     */
+    @Test
+    void testConsulterDetailsAction_Presente() {
+        Portfolio portfolio = new Portfolio();
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        portfolio.addActionQuantity(action, 50);
+        String details = portfolio.consulterDetailsAction(action);
+        assertTrue(details.contains(action.getLibelle()), "Les détails doivent contenir le nom de l'action");
+        assertTrue(details.contains("50"), "Les détails doivent afficher la quantité possédée");
+    }
+
+    /**
+     * Test afficher les détails d'une action NON présente dans le portefeuille
+     */
+    @Test
+    void testConsulterDetailsAction_Absente() {
+        Portfolio portfolio = new Portfolio();
+        Action action = ActionSimpleTest.getDefaultActionSimple();
+        String details = portfolio.consulterDetailsAction(action);
+        assertEquals("Erreur : Vous ne possédez pas cette action dans votre portefeuille.", details);
+    }
+    
     @Test
     void testRemoveActionQuantity() {
         Portfolio portfolio = new Portfolio();
