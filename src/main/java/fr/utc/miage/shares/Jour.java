@@ -15,6 +15,8 @@
  */
 package fr.utc.miage.shares;
 
+import java.time.LocalDate;
+
 /**
  * This class aims at describing a day based on a year and the day in this year.
  *
@@ -64,6 +66,40 @@ public class Jour {
      */
     public int getDay() {
         return day;
+    }
+
+    /**
+     * Converts this object to a {@link LocalDate}.
+     *
+     * @return the corresponding local date
+     * @throws IllegalArgumentException if the day is not valid for the year
+     */
+    private LocalDate toLocalDate() {
+        final LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
+        final LocalDate convertedDate = firstDayOfYear.plusDays(day - 1L);
+        if (convertedDate.getYear() != year) {
+            throw new IllegalArgumentException("Day is not valid for the provided year");
+        }
+        return convertedDate;
+    }
+
+    /**
+     * Checks whether this day is after the provided day.
+     *
+     * @param other the day to compare with
+     * @return true if this day is after the provided one
+     */
+    public boolean isAfter(final Jour other) {
+        return this.toLocalDate().isAfter(other.toLocalDate());
+    }
+
+    /**
+     * Checks whether this day is after the current system day.
+     *
+     * @return true if this day is in the future
+     */
+    public boolean isAfterToday() {
+        return this.toLocalDate().isAfter(LocalDate.now());
     }
 
     @Override
