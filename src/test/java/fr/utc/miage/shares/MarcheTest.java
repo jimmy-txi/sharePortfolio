@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
-public class MarcheTest {
+class MarcheTest {
 
     private Marche marche;
     private ActionSimple axa;
@@ -29,7 +29,7 @@ public class MarcheTest {
     /**
      * Initialisation manuelle pour les tests
      */
-    void setUp() {
+    void initial() {
         marche = new Marche();
         axa = new ActionSimple("AXA");
         total = new ActionSimple("TotalEnergies");
@@ -40,7 +40,7 @@ public class MarcheTest {
      */
     @Test
     void testAffichageListePasDactions() {
-        setUp(); // On initialise un marché vide
+        initial(); // On initialise un marché vide
 
         // Vérification 1 : La liste est bien vide
         assertTrue(marche.getActionsDisponibles().isEmpty(), "La liste doit être vide");
@@ -55,7 +55,7 @@ public class MarcheTest {
      */
     @Test
     void testAffichageListeDesActions() {
-        setUp(); // On initialise le marché et les actions
+        initial(); // On initialise le marché et les actions
 
         // L'administrateur ajoute uniquement des actions simples au marché
         marche.ajouterAction(axa);
