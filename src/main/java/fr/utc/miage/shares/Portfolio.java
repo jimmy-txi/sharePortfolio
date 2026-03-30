@@ -58,4 +58,19 @@ public class Portfolio {
         }
         this.actions.put(action, this.actions.getOrDefault(action, 0) + quantity);
     }
+
+    public String consulterDetailsAction(Action action) {
+        int quantitePossedee = this.getActionQuantity(action);
+        
+        if (quantitePossedee <= 0) {
+            return "Erreur : Vous ne possédez pas cette action dans votre portefeuille.";
+        }
+        
+        StringBuilder details = new StringBuilder();
+        details.append("=== Détails de l'action ===\n");
+        details.append("Nom : ").append(action.getLibelle()).append("\n");
+        details.append("Quantité possédée : ").append(quantitePossedee).append("\n");
+        
+        return details.toString();
+    }
 }
