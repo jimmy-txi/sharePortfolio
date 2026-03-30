@@ -17,6 +17,7 @@ package fr.utc.miage.shares;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -101,11 +102,31 @@ class ActionComposeeTest {
         ActionComposee action3 = new ActionComposee("Panier B");
         
         // --- TRUE ---
-        assertTrue(action1.equals(action1)); 
-        assertTrue(action1.equals(action2));
+        assertEquals(action1, action1);
+        assertEquals(action1, action2);
+
         // --- FALSE ---
-        assertFalse(action1.equals(action3)); 
-        assertFalse(action1.equals(null));   
-        assertFalse(action1.equals(new Object())); 
+        assertNotEquals(action1, action3);
+        assertNotEquals(null, action1);
+        assertNotEquals(new Object(), action1);
+    }
+
+    @Test
+    void testEqualsCoverageCasLimites() {
+        ActionComposee actionComposee = new ActionComposee("Total");
+        ActionSimple actionSimple = new ActionSimple("Total");
+
+        boolean isEqualToNull = actionComposee.equals(null);
+        assertFalse(isEqualToNull, "Une action ne doit pas être égale à null");
+
+        boolean isEqualToDifferentClass = actionComposee.equals(actionSimple);
+        assertFalse(isEqualToDifferentClass, "Une ActionComposee ne doit pas être égale à une ActionSimple");
+    }
+
+    @Test
+    void testHashCode() {
+        ActionComposee action1 = new ActionComposee("Total");
+        ActionComposee action2 = new ActionComposee("Total");
+        assertEquals(action1.hashCode(), action2.hashCode(), "Deux ActionComposee identiques doivent avoir le même hashCode");
     }
 }

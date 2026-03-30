@@ -78,8 +78,14 @@ public boolean equals(Object obj) {
     }
     final Action other = (Action) obj;
     
-    // On utilise getLibelle() au lieu de libelle en direct
     return Objects.equals(this.getLibelle(), other.getLibelle());
 }
+
+@Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 89 * hash + java.util.Objects.hashCode(this.getClass());
+        return hash;
+    }
 
 }
