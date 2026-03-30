@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ActionSimpleTest {
+public class ActionSimpleTest {
 
     public static ActionSimple getDefaultActionSimple(){
         return new ActionSimple("Action1");

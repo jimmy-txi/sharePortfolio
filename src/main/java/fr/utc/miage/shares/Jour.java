@@ -76,11 +76,7 @@ public class Jour {
      */
     private LocalDate toLocalDate() {
         final LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
-        final LocalDate convertedDate = firstDayOfYear.plusDays(day - 1L);
-        if (convertedDate.getYear() != year) {
-            throw new IllegalArgumentException("Day is not valid for the provided year");
-        }
-        return convertedDate;
+        return firstDayOfYear.plusDays(day - 1L);
     }
 
     /**
