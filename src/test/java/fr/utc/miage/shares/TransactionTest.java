@@ -17,7 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */class TransactionTest {
+ */
+
+class TransactionTest {
 
     private static final String FOO_SHARE1 = "Foo Share 1";
     private static final String FOO_SHARE2 = "Foo Share 2";
